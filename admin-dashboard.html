@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashbord - KlippKontroll</title> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/admin.css">
+
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+</head>
+<body class="dashboard-body">
+    <div class="page-container admin-page-container">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>Admin Dashbord</h1>
+                <div class="user-info">
+                    <span id="admin-email">Laster...</span>
+                    <button id="logout-button" class="button button-danger">Logg ut</button>
+                </div>
+            </div>
+        </header>
+
+        <nav class="dashboard-nav" style="display:none;"> 
+            </nav>
+
+        <main class="dashboard-main-content">
+
+            <div class="forms-container">
+                <section class="add-location-section card-style">
+                    <h2>Legg til Nytt Klippested</h2>
+                    <form id="add-location-form">
+                        <div class="form-group">
+                            <label for="location-name">Stedsnavn:</label>
+                            <input type="text" id="location-name" name="locationName" required placeholder="F.eks. Parkveien 1">
+                        </div>
+                        <button type="submit" class="button button-primary">Legg til Sted</button>
+                        <p id="add-location-feedback" class="feedback-message" style="display:none;"></p>
+                    </form>
+                </section>
+
+                <section class="add-employee-section card-style">
+                    <h2>Legg til Ny Ansatt</h2>
+                    <form id="add-employee-form">
+                        <div class="form-group">
+                            <label for="employee-name">Fullt Navn:</label>
+                            <input type="text" id="employee-name" name="employeeName" required placeholder="F.eks. Ola Nordmann">
+                        </div>
+                        <div class="form-group">
+                            <label for="employee-email">E-post:</label>
+                            <input type="email" id="employee-email" name="employeeEmail" required placeholder="ansatt@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="employee-password">Midlertidig Passord:</label>
+                            <input type="password" id="employee-password" name="employeePassword" required minlength="6" placeholder="Minst 6 tegn">
+                            <small>Den ansatte bør oppfordres til å endre dette ved første innlogging.</small>
+                        </div>
+                        <button type="submit" class="button button-primary">Legg til Ansatt</button>
+                        <p id="add-employee-feedback" class="feedback-message" style="display:none;"></p>
+                    </form>
+                </section>
+                </div> <section class="weekly-overview-section card-style">
+                <h2>Ukentlig Oversikt Klippesteder (Aktive)</h2>
+                <div class="controls-bar">
+                    <div class="week-selector-group">
+                        <label for="week-select">Velg Uke:</label>
+                        <select id="week-select" name="week">
+                            <option value="">Laster uker...</option>
+                        </select>
+                    </div>
+                    <div class="archived-locations-link">
+                        <button id="show-archived-button" class="button button-secondary">Vis Arkiverte Steder</button>
+                    </div>
+                </div>
+
+                <div class="locations-table-container">
+                    <table id="active-locations-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Sted</th>
+                                <th>Status (Uke <span id="selected-week-display">--</span>)</th>
+                                <th>DATO (DD.MM)</th>  <th>UKEDAG</th>        <th>Utført Av</th>
+                                <th>Kanting</th>
+                                <th>Timer Registrert</th>
+                                <th>Handlinger</th>     </tr>
+                        </thead>
+                        <tbody id="active-locations-table-body">
+                            <tr><td colspan="8" style="text-align: center; padding: 1rem;">Laster steder...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div id="archived-locations-modal" class="modal-overlay">
+                <div class="modal-content card-style">
+                    <header class="modal-header">
+                        <h2>Arkiverte Steder</h2>
+                        <button id="close-archived-modal-button" class="button-close" aria-label="Lukk modal">&times;</button>
+                    </header>
+                    <div class="modal-body">
+                        <div id="archived-locations-list-container">
+                            <p style="padding:1rem; text-align:center;">Laster arkiverte steder...</p>
+                        </div>
+                    </div>
+                    <footer class="modal-footer">
+                        <button id="cancel-archived-modal-button" class="button button-secondary">Lukk</button>
+                    </footer>
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="dashboard-footer">
+            <p>&copy; <span id="current-year">2025</span> KlippKontroll. Med enerett.</p>
+        </footer>
+    </div>
+
+    <script defer src="js/core/firebase-init.js"></script>
+    <script defer src="js/core/logger.js"></script>
+
+    <script defer src="js/services/authService.js"></script>
+    <script defer src="js/services/userService.js"></script>
+    <script defer src="js/services/locationService.js"></script>
+
+    <script defer src="js/views/adminWeeklyView.js"></script> 
+    <script defer src="js/views/adminPage.js"></script> 
+
+    <script defer src="js/main.js"></script>
+</body>
+</html>

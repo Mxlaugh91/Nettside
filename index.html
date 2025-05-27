@@ -1,0 +1,48 @@
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innlogging - Timeregistrering Gressklipping</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/login.css">
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+</head>
+<body class="login-page-body">
+    <div class="page-container login-page-override">
+        <main class="login-main">
+            <div class="login-box">
+                <div class="brand-header">
+                    <h1>Plenpilot</h1>
+                    <p>Timeregistrering som bare fungerer.</p>
+                </div>
+                <h2>Logg Inn</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="email">E-post:</label>
+                        <input type="email" id="email" name="email" required autocomplete="username" placeholder="din@epost.no">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Passord:</label>
+                        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Ditt passord">
+                    </div>
+                    <button type="submit" class="button button-primary login-button">Logg Inn</button>
+                    <p id="login-error" class="error-message" style="display:none;"></p>
+                </form>
+            </div>
+        </main>
+        <footer class="login-footer">
+            <p>&copy; <span id="current-year"></span> Din Bedrift. Med enerett.</p>
+        </footer>
+    </div>
+    <script defer src="js/core/firebase-init.js"></script>
+    <script defer src="js/core/logger.js"></script>
+    <script defer src="js/services/authService.js"></script>
+    <script defer src="js/services/userService.js"></script> 
+    <script defer src="js/views/loginPage.js"></script>
+    <script defer src="js/main.js"></script>
+</body>
+</html>

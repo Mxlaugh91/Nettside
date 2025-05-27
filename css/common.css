@@ -1,0 +1,228 @@
+/* css/common.css - Globale stiler og variabler */
+
+/* ==========================================================================
+   CSS Custom Properties (Variables) - SITE WIDE
+   ========================================================================== */
+:root {
+    --primary-green: #4CAF50;
+    --primary-green-light: rgba(76, 175, 80, 0.2);
+    --accent-blue: #2d5aa0;
+    --text-primary: #1a365d;      /* Standard for lys modus */
+    --text-secondary: #4a5568;    /* Standard for lys modus */
+    --text-light: #f0f0f0;
+    --background-overlay: rgba(0, 0, 0, 0.6); /* Ofte brukt på login, men kan være global */
+    --glass-background: rgba(240, 240, 240, 0.95); /* Glass-effekt lys modus */
+    --glass-border: rgba(255, 255, 255, 0.2);   /* Glass-effekt lys modus */
+    --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.15);
+    --shadow-strong: 0 8px 25px rgba(0, 0, 0, 0.15);
+    --border-radius: 12px;
+    --border-radius-large: 20px;
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Du kan legge til globale font-variabler her: */
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Lato', 'Helvetica Neue', Arial, sans-serif;
+    --font-lato: 'Lato', sans-serif; /* Husk @import eller <link> i HTML hvis du bruker spesifikke webfonter */
+}
+
+/* ==========================================================================
+   Dark Mode Variable Overrides - SITE WIDE
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --glass-background: rgba(30, 30, 30, 0.95);
+         --text-primary: #1a365d;
+        --text-secondary: #cbd5e0;
+        --glass-border: rgba(255, 255, 255, 0.1);
+    }
+    
+
+    body { /* En generell mørk modus bakgrunn for sider som ikke har spesifikk bakgrunn */
+        background-color: #121826; /* En mørk blå/grå farge */
+        color: var(--text-secondary);
+    }
+}
+
+/* ==========================================================================
+   Grunnleggende HTML Element Styling & Reset (God praksis)
+   ========================================================================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 100%; /* 1rem = 16px (vanligvis) */
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    background-color: #f0f4f8; /* En lys, nøytral bakgrunn */
+    color: #333;
+    display: flex; /* Forbereder for sticky footer */
+    flex-direction: column; /* Forbereder for sticky footer */
+    min-height: 100vh; /* Sørger for at body alltid er minst full høyde */
+}
+
+.page-container {
+    flex: 1; /* Sørger for at innholdet pusher footer ned */
+    width: 100%;
+    max-width: 1200px; /* Maks bredde for innhold på store skjermer */
+    margin: 0 auto; /* Sentrerer page-container */
+    padding: 0 1rem; /* Litt luft på sidene, spesielt på mobil */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 0.75rem;
+    color: #2c3e50; /* En mørkere, profesjonell farge for overskrifter */
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+a {
+    color: #3498db; /* En standard blåfarge for lenker */
+    text-decoration: none;
+}
+
+a:hover, a:focus {
+    text-decoration: underline;
+}
+
+/* Generelle knappestiler */
+.button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+    border: none;
+}
+
+.button-primary {
+    background-color: #007bff; /* En primærfarge, f.eks. blå */
+    color: #fff;
+}
+
+.button-primary:hover, .button-primary:focus {
+    background-color: #0056b3; /* Mørkere nyanse ved hover/focus */
+    transform: translateY(-1px); /* Liten bevegelse */
+}
+
+.error-message {
+    color: #d9534f; /* Rød for feilmeldinger */
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+    padding: 0.75rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+/* Responsivitet for bilder */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}/* css/common.css */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Bruker Lato som primærfont */
+    line-height: 1.6;
+    background-color: #f0f4f8; /* Fallback bakgrunnsfarge */
+    color: #333; /* Mørk grå tekst som standard */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.page-container {
+    flex: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 0.75rem;
+    color: #2c3e50; /* Mørk blågrå for overskrifter */
+    font-weight: 700; /* Fetere overskrifter med Lato */
+}
+
+p { margin-bottom: 1rem; }
+a { color: #2980b9; text-decoration: none; } /* Litt mørkere blå for lenker */
+a:hover, a:focus { text-decoration: underline; }
+
+.button {
+    display: inline-block;
+    padding: 0.85rem 1.75rem; /* Litt mer padding */
+    font-size: 1rem;
+    font-weight: 700; /* Fetere tekst på knapper */
+    text-align: center;
+    border-radius: 6px; /* Mykere avrunding */
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease, box-shadow 0.2s ease;
+    border: none;
+    letter-spacing: 0.5px; /* Litt luft mellom bokstavene */
+}
+
+.button-primary {
+    background-color: #4CAF50; /* Frisk grønnfarge */
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.button-primary:hover, .button-primary:focus {
+    background-color: #45a049; /* Litt mørkere grønn */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.error-message {
+    color: #c0392b; /* Sterkere rød */
+    background-color: #fdd; /* Lysere rød bakgrunn */
+    border: 1px solid #f88; /* Tydeligere rød kant */
+    padding: 0.85rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+/* ==========================================================================
+   Global Animations
+   ========================================================================== */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
