@@ -65,6 +65,47 @@ AppViews.weekly = (function() {
         await displayActiveLocationsWithWeeklyData(parseInt(selectedWeek), CURRENT_YEAR); 
     }
 
+    // NYTT: Funksjon for å oppdatere completion status indikator
+    function updateCompletionStatus(rowsData) {
+        const statusTextElement = document.getElementById('status-text');
+        const statusContainer = document.getElementById('completion-status');
+        
+        if (!statusTextElement || !statusContainer || !rowsData) {
+            AppLogger.warn('adminWeeklyView: Kunne ikke oppdatere completion status - mangler elementer eller data');
+            return;
+        }
+
+        const totalLocations = rowsData.length;
+        const completedLocations = rowsData.filter(data => data.statusText === "Fullført").length;
+
+        // Oppdater tekst
+        statusTextElement.textContent = `${completedLocations} av ${totalLocations} fullført`;
+
+        // Fjern eksisterende status-klasser
+        statusContainer.classList.remove('status-none', 'status-partial', 'status-complete');
+
+        // Legg til riktig status-klasse basert på fullføring
+        if (completedLocations === 0) {
+            statusContainer.classList.add('status-none');
+        } else if (completedLocations === totalLocations) {
+            statusContainer.classList.add('status-complete');
+            // Endre ikon til suksess når alt er fullført
+            const statusIcon = statusContainer.querySelector('.status-icon');
+            if (statusIcon) {
+                statusIcon.textContent = '✅';
+            }
+        } else {
+            statusContainer.classList.add('status-partial');
+            // Endre ikon til delvis fullført
+            const statusIcon = statusContainer.querySelector('.status-icon');
+            if (statusIcon) {
+                statusIcon.textContent = '⏳';
+            }
+        }
+
+        AppLogger.info(`adminWeeklyView: Completion status oppdatert - ${completedLocations}/${totalLocations} fullført`);
+    }
+
     // NYTT: Skjelett for funksjonen som skal vise data (erstatter alert)
     async function displayActiveLocationsWithWeeklyData(week, year) {
         AppLogger.info(`adminWeeklyView: Laster steder og ukedata for uke ${week}, år ${year}.`);
@@ -88,7 +129,7 @@ AppViews.weekly = (function() {
                 const weeklyTimeEntries = await AppServices.locations.getTimeEntriesForLocationByWeekYear(location.id, week, year);
                 AppLogger.debug(`adminWeeklyView: TimeEntries for ${location.name} (uke ${week}/${year}):`, weeklyTimeEntries);
 
-                let statusText = "Ikke Fullført";
+                let statusText = "Gjenstår";
                 let DATO_DM = "-";
                 let UKEDAG = "-";
                 let performedBy = "-";
@@ -167,43 +208,76 @@ AppViews.weekly = (function() {
             });
 
             // Vent på at all data for alle steder er hentet og bearbeidet
-            const rowsData = await Promise.all(locationPromises);
-
-            // Nå bygg tabellen med rowsData
+            const rowsData = await Promise.all(locationPromises);            // Nå bygg tabellen med rowsData
             rowsData.forEach(data => {
                 const row = _activeLocationsTableBodyElement.insertRow();
                 row.setAttribute('data-id', data.location.id);
 
                 row.insertCell().textContent = data.location.name || 'Ukjent Navn';
-                row.insertCell().textContent = data.statusText; 
+                  // Status cell with green styling for completed jobs and red for remaining
+                const statusCell = row.insertCell();
+                statusCell.textContent = data.statusText;
+                if (data.statusText === "Fullført") {
+                    statusCell.classList.add('status-fullfort');
+                    statusCell.setAttribute('data-status', 'fullfort');
+                } else if (data.statusText === "Gjenstår") {
+                    statusCell.classList.add('status-gjenstar');
+                    statusCell.setAttribute('data-status', 'gjenstar');
+                }
+                
                 row.insertCell().textContent = data.DATO_DM;   // NYTT
                 row.insertCell().textContent = data.UKEDAG;    // NYTT
                 row.insertCell().textContent = data.performedBy;
                 row.insertCell().textContent = data.edgingDisplay;
-                row.insertCell().textContent = `${data.weeklyHours.toFixed(1)} t`;
-
-                const actionsCell = row.insertCell();
+                row.insertCell().textContent = `${data.weeklyHours.toFixed(1)} t`;                const actionsCell = row.insertCell();
                 const archiveButton = document.createElement('button');
-                archiveButton.textContent = 'Arkiver';
-                archiveButton.className = 'button button-archive';
+                archiveButton.className = 'Btn button-archive';
                 archiveButton.setAttribute('data-id', data.location.id);
+                
+                // Create the expandable button structure
+                const svgWrapper = document.createElement('div');
+                svgWrapper.className = 'svgWrapper';
+                  const svgIcon = document.createElement('div');
+                svgIcon.className = 'svgIcon';
+                svgIcon.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 8v13H3V8"/>
+                        <path d="M1 3h22v5H1z"/>
+                        <path d="M10 12l4-4 4 4"/>
+                    </svg>
+                `;
+                
+                const text = document.createElement('span');
+                text.className = 'text';
+                text.textContent = 'Arkiver';
+                
+                svgWrapper.appendChild(svgIcon);
+                archiveButton.appendChild(svgWrapper);
+                archiveButton.appendChild(text);
                 actionsCell.appendChild(archiveButton);
             });
 
             AppLogger.info('adminWeeklyView: Aktive steder med ukedata vist i tabellen.');
+            
+            // NYTT: Oppdater completion status
+            updateCompletionStatus(rowsData);
+            
             setupArchiveButtonListener();
         } catch (error) {
             AppLogger.error("adminWeeklyView: Feil ved lasting av aktive steder for ukentlig visning:", error);
             _activeLocationsTableBodyElement.innerHTML = '<tr><td colspan="7" style="color:red;">Feil ved lasting av steder.</td></tr>';
         }
     }
-    
-    // NYTT: Funksjon for å håndtere arkiver-knapp klikk (flyttet fra adminPage.js)
+      // NYTT: Funksjon for å håndtere arkiver-knapp klikk (flyttet fra adminPage.js)
     async function handleArchiveButtonClick(event) {
-        if (event.target && event.target.classList.contains('button-archive')) {
-            const locationId = event.target.getAttribute('data-id');
+        // Find the button element - could be the target itself or a parent
+        const button = event.target.closest('.button-archive') || 
+                      (event.target.classList && event.target.classList.contains('button-archive') ? event.target : null);
+        
+        if (button) {
+            const locationId = button.getAttribute('data-id');
             let locationName = 'dette stedet';
-            const tableRow = event.target.closest('tr');
+            const tableRow = button.closest('tr');
             if (tableRow && tableRow.cells && tableRow.cells.length > 0) {
                 locationName = `"${tableRow.cells[0].textContent}"`;
             }

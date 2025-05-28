@@ -24,27 +24,86 @@
                     <button id="logout-button" class="button button-danger">Logg ut</button>
                 </div>
             </div>
-        </header>
-
-        <nav class="dashboard-nav" style="display:none;"> 
-            </nav>
+        </header>        <nav class="admin-navbar">
+            <ul>
+                <li class="nav-item active"><a href="#oversikt">Oversikt</a></li>
+                <li class="nav-item"><a href="#steder">Driftsområder</a></li>
+                <li class="nav-item"><a href="#administrer-lokasjoner">Administrer lokasjoner</a></li>
+                <li class="nav-item"><a href="#ansatte">Ansatte</a></li>
+                <li class="nav-item"><a href="#arkiv">Arkivet</a></li>
+                <li class="nav-item"><a href="#kostnadsoversikt">Kostnadsoversikt</a></li>
+            </ul>
+        </nav>
 
         <main class="dashboard-main-content">
-
-            <div class="forms-container">
-                <section class="add-location-section card-style">
-                    <h2>Legg til Nytt Klippested</h2>
-                    <form id="add-location-form">
-                        <div class="form-group">
-                            <label for="location-name">Stedsnavn:</label>
-                            <input type="text" id="location-name" name="locationName" required placeholder="F.eks. Parkveien 1">
+                <section id="oversikt" class="card-style" style="display:none;"></section>
+                <section id="steder" class="card-style" style="display:none;">
+                    <div class="flex-header" style="display: flex; align-items: flex-end; gap: 2rem; flex-wrap: wrap; justify-content: space-between;">
+                        <div class="add-location-section card-style">
+                            <div class="add-location-header">
+                                <span class="add-location-icon" aria-hidden="true">🏡</span>
+                                <h2>Legg til Nytt Klippested</h2>
+                            </div>
+                            <form id="add-location-form">
+                                <div class="add-location-fields-row">
+                                    <div class="form-group">
+                                        <label for="location-name" class="add-location-label-green">Stedsnavn:</label>
+                                        <input type="text" id="location-name" name="locationName" required placeholder="F.eks. Parkveien 1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="location-address" class="add-location-label-green">Adresse:</label>
+                                        <input type="text" id="location-address" name="locationAddress" required placeholder="F.eks. Parkveien 1, Oslo">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="location-estimate" class="add-location-label-green">Tidsberegning (min):</label>
+                                        <input type="number" id="location-estimate" name="locationEstimate" min="1" max="999" placeholder="F.eks. 45">
+                                    </div>
+                                </div>
+                                <div class="add-location-actions">
+                                    <button type="submit" class="button button-primary add-location-btn-advanced">Legg til Sted</button>
+                                    <p id="add-location-feedback" class="feedback-message" style="display:none;"></p>
+                                </div>
+                            </form>
                         </div>
-                        <button type="submit" class="button button-primary">Legg til Sted</button>
-                        <p id="add-location-feedback" class="feedback-message" style="display:none;"></p>
-                    </form>
+                    </div>
+                    <div id="locations-list-container">
+                        <div class="locations-table-container card-style locations-table-card" style="margin-top:0;">                            <div class="locations-table-header-row" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 1rem;">
+                                <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600;">Faste Aktive steder</h3>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div class="completion-status" id="completion-status">
+                                        <span class="status-icon">📊</span>
+                                        <span class="status-text" id="status-text">0 av 0 fullført</span>
+                                    </div>
+                                    <div class="week-selector-group" style="margin-bottom: 0;">
+                                        <select id="week-select" name="week-select"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="data-table">
+                                <thead>                                    <tr>
+                                        <th>Stedsnavn</th>
+                                        <th>Status</th>                                        <th>DATO</th>
+                                        <th>UKEDAG</th>
+                                        <th>Ansvarlig</th>
+                                        <th>Kanting</th>
+                                        <th>Arbeidstid</th>
+                                        <th>Handling</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="active-locations-table-body">
+                                    <!-- Dynamisk innhold fra adminWeeklyView.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>                </section>
+                <section id="administrer-lokasjoner" class="card-style" style="display:none;">
+                    <h2>Administrer lokasjoner</h2>
+                    <div id="administrer-lokasjoner-content">
+                        <!-- Dynamisk innhold for administrering av lokasjoner vises her -->
+                        <p>Her kan du administrere alle lokasjoner i systemet.</p>
+                    </div>
                 </section>
-
-                <section class="add-employee-section card-style">
+                <section id="ansatte" class="card-style">
                     <h2>Legg til Ny Ansatt</h2>
                     <form id="add-employee-form">
                         <div class="form-group">
@@ -64,56 +123,14 @@
                         <p id="add-employee-feedback" class="feedback-message" style="display:none;"></p>
                     </form>
                 </section>
-                </div> <section class="weekly-overview-section card-style">
-                <h2>Ukentlig Oversikt Klippesteder (Aktive)</h2>
-                <div class="controls-bar">
-                    <div class="week-selector-group">
-                        <label for="week-select">Velg Uke:</label>
-                        <select id="week-select" name="week">
-                            <option value="">Laster uker...</option>
-                        </select>
+                <section id="arkiv" class="card-style" style="display:none;">
+                    <h2>Arkiverte steder</h2>
+                    <div id="archived-locations-list-container">
+                        <!-- Dynamisk innhold for arkiverte steder vises her -->
                     </div>
-                    <div class="archived-locations-link">
-                        <button id="show-archived-button" class="button button-secondary">Vis Arkiverte Steder</button>
-                    </div>
-                </div>
-
-                <div class="locations-table-container">
-                    <table id="active-locations-table" class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Sted</th>
-                                <th>Status (Uke <span id="selected-week-display">--</span>)</th>
-                                <th>DATO (DD.MM)</th>  <th>UKEDAG</th>        <th>Utført Av</th>
-                                <th>Kanting</th>
-                                <th>Timer Registrert</th>
-                                <th>Handlinger</th>     </tr>
-                        </thead>
-                        <tbody id="active-locations-table-body">
-                            <tr><td colspan="8" style="text-align: center; padding: 1rem;">Laster steder...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <div id="archived-locations-modal" class="modal-overlay">
-                <div class="modal-content card-style">
-                    <header class="modal-header">
-                        <h2>Arkiverte Steder</h2>
-                        <button id="close-archived-modal-button" class="button-close" aria-label="Lukk modal">&times;</button>
-                    </header>
-                    <div class="modal-body">
-                        <div id="archived-locations-list-container">
-                            <p style="padding:1rem; text-align:center;">Laster arkiverte steder...</p>
-                        </div>
-                    </div>
-                    <footer class="modal-footer">
-                        <button id="cancel-archived-modal-button" class="button button-secondary">Lukk</button>
-                    </footer>
-                </div>
+                </section>
+                <section id="kostnadsoversikt" class="card-style" style="display:none;"></section>
             </div>
-
-        </main>
 
         <footer class="dashboard-footer">
             <p>&copy; <span id="current-year">2025</span> KlippKontroll. Med enerett.</p>

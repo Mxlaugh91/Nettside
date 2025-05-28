@@ -258,6 +258,37 @@ async function getTimeEntriesForLocation(locationId) {
     }
     // NYTT SLUTT
 
+    // NYTT: Funksjon for å slette et sted permanent
+    /**
+     * Sletter et sted permanent fra databasen, inkludert alle timeregistreringer.
+     * @param {string} locationId - ID-en til stedet som skal slettes.
+     * @returns {Promise<boolean>} True ved suksess, false ved feil.
+     */
+    async function deleteLocation(locationId) {
+        AppLogger.info('locationService: Sletter sted med ID:', locationId);
+        if (!locationId) {
+            AppLogger.error('locationService: Ingen locationId oppgitt for sletting.');
+            return false;
+        }
+        try {
+            // Slett alle timeEntries for dette stedet
+            const timeEntriesRef = firestoreDB.collection('timeEntries');
+            const snapshot = await timeEntriesRef.where('locationId', '==', locationId).get();
+            const batch = firestoreDB.batch();
+            snapshot.forEach(doc => {
+                batch.delete(doc.ref);
+            });
+            await batch.commit();
+            // Slett selve stedet
+            await locationsCollection.doc(locationId).delete();
+            AppLogger.info('locationService: Sted og tilhørende timeEntries slettet:', locationId);
+            return true;
+        } catch (error) {
+            AppLogger.error('locationService: Feil ved sletting av sted:', locationId, error);
+            return false;
+        }
+    }
+
     // Offentlig API for locationService
 
     return {
@@ -267,6 +298,7 @@ async function getTimeEntriesForLocation(locationId) {
         getArchivedLocations: getArchivedLocations,
         getTimeEntriesForLocation: getTimeEntriesForLocation, // Beholder denne hvis den trengs for totalberegninger
         restoreLocation: restoreLocation,
-        getTimeEntriesForLocationByWeekYear: getTimeEntriesForLocationByWeekYear // NYTT
+        getTimeEntriesForLocationByWeekYear: getTimeEntriesForLocationByWeekYear, // NYTT
+        deleteLocation: deleteLocation
     };
 })();
