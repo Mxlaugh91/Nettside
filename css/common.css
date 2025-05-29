@@ -77,14 +77,8 @@ body {
     padding: 0 1rem; /* Litt luft på sidene, spesielt på mobil */
 }
 
-h1, h2, h3, h4, h5, h6 {
-    margin-bottom: 0.75rem;
-    color: #2c3e50; /* En mørkere, profesjonell farge for overskrifter */
-}
 
-p {
-    margin-bottom: 1rem;
-}
+
 
 a {
     color: #3498db; /* En standard blåfarge for lenker */
@@ -184,11 +178,15 @@ a:hover, a:focus {
 }
 
 .card-style {
-    background-color: #fff;
+    background: rgba(26, 32, 44, 0.95);
     padding: 2rem 2.5rem;
+        box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.4),
+        0 15px 30px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 0 1px rgba(66, 153, 225, 0.2);
     border-radius: var(--border-radius-large, 16px);
-    box-shadow: var(--shadow-soft, 0 2px 12px 0 rgba(60, 72, 88, 0.10));
-    border: 1px solid #e7eaed;
+    border: 1px solid rgba(66, 153, 225, 0.3);
     transition: var(--transition-smooth, box-shadow 0.2s);
 }
 
