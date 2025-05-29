@@ -23,14 +23,57 @@ document.addEventListener('DOMContentLoaded', function() {
 	   if (typeof AppServices.users.addEmployee === 'undefined') { // NYTT: Sjekk for den nye funksjonen
         AppLogger.error("Kritisk feil: AppServices.users.addEmployee mangler i userService.js eller er ikke eksportert!");
         // Vurder å returnere her for å unngå ytterligere feil
+    }    AppLogger.info('adminPage.js lastet og initialiserer.');    // --- Helper Functions ---    // Funksjon for å laste administrer lokasjoner med riktig timing
+    function loadAdministrerLokasjoner() {
+        console.log('loadAdministrerLokasjoner() called');
+        const maxAttempts = 10;
+        let attempts = 0;
+          function tryLoad() {
+            attempts++;
+            console.log(`loadAdministrerLokasjoner attempt ${attempts}`);
+            
+            try {
+                // Prøv å bruke ensureAdministrerLokasjoner hvis tilgjengelig
+                if (typeof ensureAdministrerLokasjoner !== 'undefined') {
+                    console.log('Using ensureAdministrerLokasjoner');
+                    const adminLokInstance = ensureAdministrerLokasjoner();
+                    if (adminLokInstance) {
+                        console.log('AdministrerLokasjoner instance found, calling loadAllLocations');
+                        adminLokInstance.loadAllLocations();
+                        return;
+                    }
+                }
+                
+                // Fallback til direkte tilgang
+                if (typeof administrerLokasjoner !== 'undefined' && administrerLokasjoner) {
+                    console.log('Using direct administrerLokasjoner access');
+                    administrerLokasjoner.loadAllLocations();
+                    return;
+                }
+                
+                if (attempts < maxAttempts) {
+                    setTimeout(tryLoad, 100); // Prøv igjen etter 100ms
+                } else {
+                    console.error('AdministrerLokasjoner objektet kunne ikke lastes etter', maxAttempts, 'forsøk');
+                }
+            } catch (error) {
+                console.error('Feil ved lasting av administrer lokasjoner:', error);
+                if (attempts < maxAttempts) {
+                    setTimeout(tryLoad, 100);
+                }
+            }
+        }
+        
+        tryLoad();
     }
-    AppLogger.info('adminPage.js lastet og initialiserer.');
 
-    // --- DOM Element-referanser ---
+    // --- DOM Element-referanser ---    
     const adminEmailSpan = document.getElementById('admin-email');
     const logoutButton = document.getElementById('logout-button');
     const addLocationForm = document.getElementById('add-location-form');
     const locationNameInput = document.getElementById('location-name');
+    const locationAddressInput = document.getElementById('location-address');
+    const locationEstimatedTimeInput = document.getElementById('location-estimated-time');
     const addLocationFeedback = document.getElementById('add-location-feedback');
     const archivedLocationsListContainer = document.getElementById('archived-locations-list-container');
     const addEmployeeForm = document.getElementById('add-employee-form');
@@ -109,9 +152,43 @@ document.addEventListener('DOMContentLoaded', function() {
                             </td>
                           </tr>`;
             }
-            tableHTML += `</tbody></table>`;
+            // Legg til "Slett alle arkiverte steder"-knapp hvis det finnes arkiverte steder
+            if (archivedLocations && archivedLocations.length > 0) {
+                tableHTML += `</tbody></table>`;
+                tableHTML += `<button id="delete-all-archived-btn" class="button button-danger" style="margin-top:1.5rem;">Slett alle arkiverte steder</button>`;
+            } else {
+                tableHTML += `</tbody></table>`;
+            }
             archivedLocationsListContainer.innerHTML = tableHTML;
             AppLogger.info('AdminPage: Arkiverte steder vist i arkivseksjonen.');
+
+            // Sett opp event listener for masse-sletting
+            const deleteAllBtn = document.getElementById('delete-all-archived-btn');
+            if (deleteAllBtn) {
+                deleteAllBtn.addEventListener('click', async () => {
+                    if (confirm('Er du sikker på at du vil slette ALLE arkiverte steder permanent? Dette kan ikke angres!')) {
+                        try {
+                            let allSuccess = true;
+                            for (const location of archivedLocations) {
+                                const success = await AppServices.locations.deleteLocation(location.id);
+                                if (!success) allSuccess = false;
+                            }
+                            if (allSuccess) {
+                                showFeedback('Alle arkiverte steder ble slettet permanent!', 'success', addLocationFeedback);
+                            } else {
+                                showFeedback('Noen steder kunne ikke slettes. Prøv igjen.', 'error', addLocationFeedback);
+                            }
+                            loadAndDisplayArchivedLocations();
+                            if (AppViews && AppViews.weekly && typeof AppViews.weekly.refreshActiveView === 'function') {
+                                AppViews.weekly.refreshActiveView();
+                            }
+                        } catch (error) {
+                            AppLogger.error('AdminPage: Feil under masse-sletting av arkiverte steder:', error);
+                            showFeedback('En feil oppstod ved sletting av alle arkiverte steder.', 'error', addLocationFeedback);
+                        }
+                    }
+                });
+            }
         } catch (error) {
             AppLogger.error('AdminPage: Feil under lasting av arkiverte steder for arkivseksjonen:', error);
             archivedLocationsListContainer.innerHTML = '<p style="color:red; padding:1rem; text-align:center;">Kunne ikke laste arkiverte steder.</p>';
@@ -182,8 +259,7 @@ async function handleRestoreButtonClick(event) {
     if (archivedLocationsListContainer) {
         archivedLocationsListContainer.addEventListener('click', handleRestoreButtonClick);
         archivedLocationsListContainer.addEventListener('click', handleDeleteButtonClick);
-        AppLogger.info('AdminPage: Event listener for Gjenopprett-knapper er aktivert på containeren #archived-locations-list-container (også for arkivseksjonen).');
-    } else { AppLogger.warn('AdminPage: #archivedLocationsListContainer ikke funnet for gjenopprett-lytter.'); }
+        AppLogger.info('AdminPage: Event listener for Gjenopprett-knapper er aktivert på containeren #archived-locations-list-container (også for arkivseksjonen).');    } else { AppLogger.warn('AdminPage: #archivedLocationsListContainer ikke funnet for gjenopprett-lytter.'); }
 
     // --- Navigasjonslogikk: Vis kun valgt seksjon ---
     function showSectionByNav(navId) {
@@ -196,17 +272,21 @@ async function handleRestoreButtonClick(event) {
             navItems[0].classList.add('active');
         } else if (navId === 'steder') {
             document.getElementById('steder').style.display = '';
-            navItems[1].classList.add('active');
+            navItems[1].classList.add('active');        } else if (navId === 'administrer-lokasjoner') {
+            document.getElementById('administrer-lokasjoner').style.display = '';
+            navItems[2].classList.add('active');
+            // Last inn data for administrer lokasjoner når objektet er klart
+            loadAdministrerLokasjoner();
         } else if (navId === 'ansatte') {
             document.getElementById('ansatte').style.display = '';
-            navItems[2].classList.add('active');
+            navItems[3].classList.add('active');
         } else if (navId === 'arkiv') {
             document.getElementById('arkiv').style.display = '';
-            navItems[3].classList.add('active');
+            navItems[4].classList.add('active');
             loadAndDisplayArchivedLocations();
         } else if (navId === 'kostnadsoversikt') {
             document.getElementById('kostnadsoversikt').style.display = '';
-            navItems[4].classList.add('active');
+            navItems[5].classList.add('active');
         }
     }
     // Sett opp event listeners for nav
@@ -219,8 +299,6 @@ async function handleRestoreButtonClick(event) {
     });
     // Vis "Steder" som standard
     showSectionByNav('steder');
-
-
     // --- Sidebeskyttelse, Rolle-sjekk og Initiering ---
     AppServices.auth.onAuthStateChanged(async firebaseUser => {
         if (firebaseUser) {
@@ -268,26 +346,47 @@ async function handleRestoreButtonClick(event) {
             // onAuthStateChanged håndterer omdirigering
         });
     } else { AppLogger.warn("AdminPage: Utloggingsknapp #logout-button ikke funnet."); }
-    
-    // --- Håndter "Legg til Nytt Sted"-skjema ---
-    if (addLocationForm && locationNameInput) {
+      // --- Håndter "Legg til Nytt Sted"-skjema ---
+    if (addLocationForm && locationNameInput && locationAddressInput && locationEstimatedTimeInput) {
         addLocationForm.addEventListener('submit', async function(event) {
             event.preventDefault();
             const locationName = locationNameInput.value.trim();
+            const locationAddress = locationAddressInput.value.trim();
+            const estimatedTime = parseFloat(locationEstimatedTimeInput.value);
+            
+            // Validering
             if (locationName === '') {
 				showFeedback('Stedsnavn kan ikke være tomt.', 'error', addLocationFeedback); 
                 return;
             }
+            if (locationAddress === '') {
+				showFeedback('Adresse kan ikke være tom.', 'error', addLocationFeedback); 
+                return;
+            }
+            if (isNaN(estimatedTime) || estimatedTime <= 0) {
+				showFeedback('Estimert tid må være et gyldig tall større enn 0.', 'error', addLocationFeedback); 
+                return;
+            }
+            
             showFeedback(`Legger til "${locationName}"...`, 'pending', addLocationFeedback, 0);
             try {
-                const result = await AppServices.locations.addLocation({ name: locationName });
+                const locationData = { 
+                    name: locationName,
+                    address: locationAddress,
+                    estimatedTime: estimatedTime
+                };
+                const result = await AppServices.locations.addLocation(locationData);
                 if (result && result.id) {
                     AppLogger.info('AdminPage: Sted lagt til. Ber AppViews.weekly om å oppdatere.');
                     showFeedback(`Stedet "${locationName}" ble lagt til!`, 'success', addLocationFeedback);
                     locationNameInput.value = ''; 
+                    locationAddressInput.value = '';
+                    locationEstimatedTimeInput.value = '';
                     if (AppViews && AppViews.weekly && typeof AppViews.weekly.refreshActiveView === 'function') {
                         AppViews.weekly.refreshActiveView();
                     }
+                    // Oppdater også administrer lokasjoner visningen
+                    loadAdministrerLokasjoner();
                 } else {
                     AppLogger.error('AdminPage: Kunne ikke legge til sted via service.');
                     showFeedback('En feil oppstod. Stedet ble ikke lagt til.', 'error', addLocationFeedback);
@@ -297,7 +396,7 @@ async function handleRestoreButtonClick(event) {
                 showFeedback('En systemfeil oppstod. Stedet ble ikke lagt til.', 'error', addLocationFeedback);
             }
         });
-    } else { AppLogger.warn('AdminPage: Skjemaelementer #add-location-form eller #location-name ikke funnet.'); }
+    } else { AppLogger.warn('AdminPage: Skjemaelementer for "Legg til Sted" ikke funnet. Sjekk ID-er: #add-location-form, #location-name, #location-address, #location-estimated-time'); }
 	
 	if (addEmployeeForm && employeeNameInput && employeeEmailInput && employeePasswordInput && addEmployeeFeedback) {
         addEmployeeForm.addEventListener('submit', async function(event) {

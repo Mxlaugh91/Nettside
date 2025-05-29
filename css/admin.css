@@ -281,6 +281,33 @@
     backdrop-filter: blur(15px);
 }
 
+/* Specific override for alle-steder-container with card-style */
+.alle-steder-container.card-style {
+    background: linear-gradient(135deg, rgba(26,32,44,0.95) 0%, rgba(45,55,72,0.92) 100%) !important;
+    color: #e2e8f0 !important;
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.4),
+        0 15px 30px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 0 1px rgba(66, 153, 225, 0.2) !important;
+    border: 1px solid rgba(66, 153, 225, 0.3) !important;
+    backdrop-filter: blur(15px);
+}
+
+/* Ensure alle-steder-container headings and text use light colors */
+.alle-steder-container.card-style h3,
+.alle-steder-container.card-style .steder-count,
+.alle-steder-container.card-style .loading-message,
+.alle-steder-container.card-style .empty-message {
+    color: #e2e8f0 !important;
+}
+
+.alle-steder-container.card-style .steder-count {
+    background: rgba(66, 153, 225, 0.2) !important;
+    color: #bee3f8 !important;
+    border: 1px solid rgba(66, 153, 225, 0.3) !important;
+}
+
 /* Text color consistency throughout admin dashboard */
 .dashboard-body,
 .dashboard-body p,
@@ -407,6 +434,11 @@
     backdrop-filter: blur(15px);
     overflow: hidden;
     position: relative;
+}
+
+.data-table th,
+.data-table td {
+    text-align: center;
 }
 
 /* Add a subtle animated gradient border */
@@ -793,4 +825,291 @@ textarea:focus {
     }
 }
 
+/* ===== ADMINISTRER LOKASJONER HORIZONTAL LAYOUT ===== */
+.administrer-layout-horizontal {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
+.administrer-layout-horizontal .add-location-section {
+    flex: 0 0 350px; /* Fast bredde for add-location */
+    min-width: 300px;
+}
+
+.administrer-layout-horizontal .alle-steder-container {
+    flex: 1; /* Tar resten av plassen */
+    min-width: 400px;
+    margin-bottom: 0; /* Fjern margin når de er side ved side */
+}
+
+/* Responsive design for mindre skjermer - stabel vertikalt */
+@media (max-width: 1024px) {
+    .administrer-layout-horizontal {
+        flex-direction: column;
+    }
+    
+    .administrer-layout-horizontal .add-location-section {
+        flex: none;
+        width: 100%;
+    }
+    
+    .administrer-layout-horizontal .alle-steder-container {
+        margin-bottom: 2rem; /* Gjenopprett margin på mindre skjermer */
+    }
+}
+
 /* Seksjonsspesifikke og layout-spesifikke stiler beholdes her */
+
+/* ===== ALLE STEDER SECTION ===== */
+.alle-steder-container {
+    margin-bottom: 2rem;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, rgba(26,32,44,0.95) 0%, rgba(45,55,72,0.92) 100%);
+    border-radius: 1.1rem;
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.4),
+        0 15px 30px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 0 1px rgba(66, 153, 225, 0.2);
+    border: 1px solid rgba(66, 153, 225, 0.3);
+    backdrop-filter: blur(15px);
+}
+
+.alle-steder-container.card-style {
+    background: linear-gradient(135deg, rgba(26,32,44,0.95) 0%, rgba(45,55,72,0.92) 100%) !important;
+    color: #e2e8f0 !important;
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.4),
+        0 15px 30px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 0 1px rgba(66, 153, 225, 0.2) !important;
+    border: 1px solid rgba(66, 153, 225, 0.3) !important;
+    backdrop-filter: blur(15px);
+}
+
+.alle-steder-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(66, 153, 225, 0.3);
+}
+
+.alle-steder-icon {
+    font-size: 1.5rem;
+    color: #4299e1;
+    filter: drop-shadow(0 1px 2px rgba(66, 153, 225, 0.3));
+}
+
+.alle-steder-header h3 {
+    margin: 0;
+    color: #e2e8f0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    flex-grow: 1;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.steder-count {
+    background: rgba(66, 153, 225, 0.2);
+    color: #bee3f8;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid rgba(66, 153, 225, 0.3);
+}
+
+/* Grid for sted-cards inne i hovedcarden - vertikal layout */
+.steder-cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-height: 150px;
+}
+
+/* Individuelle sted-cards - enda mindre og kompakte */
+.sted-card {
+    background: rgba(45, 55, 72, 0.8);
+    border: 1px solid rgba(66, 153, 225, 0.3);
+    border-radius: 6px;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    max-width: 100%;
+}
+
+.sted-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(66, 153, 225, 0.2);
+    border-color: rgba(66, 153, 225, 0.5);
+    background: rgba(45, 55, 72, 0.9);
+}
+
+.sted-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #4299e1, #3182ce);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sted-card:hover::before {
+    opacity: 1;
+}
+
+.sted-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.3rem;
+}
+
+.sted-card-icon {
+    font-size: 0.9rem;
+    color: #4299e1;
+    filter: drop-shadow(0 1px 2px rgba(66, 153, 225, 0.3));
+}
+
+.sted-card h4 {
+    margin: 0;
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    flex-grow: 1;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.sted-card-info {
+    color: #cbd5e0;
+    font-size: 0.7rem;
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
+}
+
+.sted-card-actions {
+    margin-top: 0.4rem;
+    display: flex;
+    gap: 0.3rem;
+    justify-content: flex-end;
+}
+
+/* Loading og tom tilstand */
+.loading-message, .empty-message {
+    text-align: center;
+    color: #cbd5e0;
+    font-style: italic;
+    padding: 1rem;
+    background: rgba(45, 55, 72, 0.6);
+    border-radius: 6px;
+    border: 2px dashed rgba(66, 153, 225, 0.3);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-size: 0.8rem;
+}
+
+/* Responsive design for mindre skjermer */
+@media (max-width: 768px) {
+    .steder-cards-grid {
+        gap: 0.4rem;
+    }
+    
+    .alle-steder-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+    
+    .alle-steder-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .sted-card {
+        padding: 0.4rem;
+    }
+    
+    .sted-card h4 {
+        font-size: 0.8rem;
+    }
+    
+    .sted-card-info {
+        font-size: 0.65rem;
+    }
+}
+
+/* ===== ADMINISTRER LOKASJONER HORIZONTAL LAYOUT ===== */
+.administrer-layout-horizontal {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
+.administrer-layout-horizontal .add-location-section {
+    flex: 0 0 400px; /* Økt bredde for flere felter */
+    min-width: 350px;
+}
+
+.administrer-layout-horizontal .alle-steder-container {
+    flex: 1; /* Tar resten av plassen */
+    min-width: 400px;
+    margin-bottom: 0; /* Fjern margin når de er side ved side */
+}
+
+/* Add location form styling */
+.add-location-section .form-group {
+    margin-bottom: 1rem;
+}
+
+.add-location-section .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.add-location-section input[type="text"],
+.add-location-section input[type="number"] {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid rgba(66, 153, 225, 0.3);
+    border-radius: 6px;
+    background: rgba(45, 55, 72, 0.8);
+    color: #e2e8f0;
+    font-size: 0.95rem;
+}
+
+.add-location-section input[type="text"]:focus,
+.add-location-section input[type="number"]:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+}
+
+.add-location-section label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #e2e8f0;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+/* Responsive design for mindre skjermer - stabel vertikalt */
+@media (max-width: 1024px) {
+    .administrer-layout-horizontal {
+        flex-direction: column;
+    }
+    
+    .administrer-layout-horizontal .add-location-section {
+        flex: none;
+        width: 100%;
+    }
+    
+    .administrer-layout-horizontal .alle-steder-container {
+        margin-bottom: 2rem; /* Gjenopprett margin på mindre skjermer */
+    }
+}

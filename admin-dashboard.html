@@ -36,36 +36,7 @@
         </nav>
 
         <main class="dashboard-main-content">
-                <section id="oversikt" class="card-style" style="display:none;"></section>
-                <section id="steder" class="card-style" style="display:none;">
-                    <div class="flex-header" style="display: flex; align-items: flex-end; gap: 2rem; flex-wrap: wrap; justify-content: space-between;">
-                        <div class="add-location-section card-style">
-                            <div class="add-location-header">
-                                <span class="add-location-icon" aria-hidden="true">🏡</span>
-                                <h2>Legg til Nytt Klippested</h2>
-                            </div>
-                            <form id="add-location-form">
-                                <div class="add-location-fields-row">
-                                    <div class="form-group">
-                                        <label for="location-name" class="add-location-label-green">Stedsnavn:</label>
-                                        <input type="text" id="location-name" name="locationName" required placeholder="F.eks. Parkveien 1">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="location-address" class="add-location-label-green">Adresse:</label>
-                                        <input type="text" id="location-address" name="locationAddress" required placeholder="F.eks. Parkveien 1, Oslo">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="location-estimate" class="add-location-label-green">Tidsberegning (min):</label>
-                                        <input type="number" id="location-estimate" name="locationEstimate" min="1" max="999" placeholder="F.eks. 45">
-                                    </div>
-                                </div>
-                                <div class="add-location-actions">
-                                    <button type="submit" class="button button-primary add-location-btn-advanced">Legg til Sted</button>
-                                    <p id="add-location-feedback" class="feedback-message" style="display:none;"></p>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                <section id="oversikt" class="card-style" style="display:none;"></section>                <section id="steder" class="card-style" style="display:none;">
                     <div id="locations-list-container">
                         <div class="locations-table-container card-style locations-table-card" style="margin-top:0;">                            <div class="locations-table-header-row" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 1rem;">
                                 <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600;">Faste Aktive steder</h3>
@@ -81,26 +52,57 @@
                             </div>
                             <table class="data-table">
                                 <thead>                                    <tr>
-                                        <th>Stedsnavn</th>
-                                        <th>Status</th>                                        <th>DATO</th>
-                                        <th>UKEDAG</th>
-                                        <th>Ansvarlig</th>
-                                        <th>Kanting</th>
-                                        <th>Arbeidstid</th>
-                                        <th>Handling</th>
-                                    </tr>
+        <th>Stedsnavn</th>
+        <th>Status</th>
+        <th>Dato</th>
+        <th>Ukedag</th>
+        <th>Kanting</th>
+        <th>Arbeidstid</th>
+        <th>Ansvarlig</th>
+    </tr>
                                 </thead>
                                 <tbody id="active-locations-table-body">
                                     <!-- Dynamisk innhold fra adminWeeklyView.js -->
                                 </tbody>
                             </table>
                         </div>
-                    </div>                </section>
-                <section id="administrer-lokasjoner" class="card-style" style="display:none;">
+                    </div>                </section>                <section id="administrer-lokasjoner" class="card-style" style="display:none;">
                     <h2>Administrer lokasjoner</h2>
-                    <div id="administrer-lokasjoner-content">
-                        <!-- Dynamisk innhold for administrering av lokasjoner vises her -->
-                        <p>Her kan du administrere alle lokasjoner i systemet.</p>
+                    <div id="administrer-lokasjoner-content" class="administrer-layout-horizontal">                        <!-- Legg til Nytt Klippested seksjon -->
+                        <div class="add-location-section card-style">
+                            <h3>Legg til Nytt Klippested</h3>
+                            <form id="add-location-form">
+                                <div class="form-group">
+                                    <label for="location-name">Stedsnavn:</label>
+                                    <input type="text" id="location-name" name="locationName" required placeholder="F.eks. Sentrum Park">
+                                </div>
+                                <div class="form-group">
+                                    <label for="location-address">Adresse:</label>
+                                    <input type="text" id="location-address" name="locationAddress" required placeholder="F.eks. Hovedgata 123, 0123 Oslo">
+                                </div>
+                                <div class="form-group">
+                                    <label for="location-estimated-time">Estimert tid (timer):</label>
+                                    <input type="number" id="location-estimated-time" name="locationEstimatedTime" required min="0.1" step="0.1" placeholder="F.eks. 2.5">
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="button button-primary">Legg til Klippested</button>
+                                </div>
+                            </form>
+                            <p id="add-location-feedback" class="feedback-message" style="display:none;"></p>
+                        </div>
+
+                        <!-- Alle steder seksjon med card-in-card design -->
+                        <div class="alle-steder-container card-style">
+                            <div class="alle-steder-header">
+                                <span class="alle-steder-icon" aria-hidden="true">🏘️</span>
+                                <h3>Alle steder</h3>
+                                <span class="steder-count" id="steder-count">0 steder</span>
+                            </div>
+                            <div class="steder-cards-grid" id="steder-cards-grid">
+                                <!-- Individuelle sted-cards vil bli lagt til her dynamisk -->
+                                <div class="loading-message">Laster steder...</div>
+                            </div>
+                        </div>
                     </div>
                 </section>
                 <section id="ansatte" class="card-style">
@@ -142,10 +144,9 @@
 
     <script defer src="js/services/authService.js"></script>
     <script defer src="js/services/userService.js"></script>
-    <script defer src="js/services/locationService.js"></script>
-
-    <script defer src="js/views/adminWeeklyView.js"></script> 
-    <script defer src="js/views/adminPage.js"></script> 
+    <script defer src="js/services/locationService.js"></script>    <script defer src="js/views/adminWeeklyView.js"></script> 
+    <script defer src="js/views/administrerLokasjoner.js"></script>
+    <script defer src="js/views/adminPage.js"></script>
 
     <script defer src="js/main.js"></script>
 </body>

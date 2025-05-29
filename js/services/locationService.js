@@ -11,11 +11,20 @@ AppServices.locations = (function() {
     }
 
     const locationsCollection = firestoreDB.collection('locations');
-
-
     async function addLocation(locationData) {
         if (!locationData || !locationData.name || locationData.name.trim() === '') {
             AppLogger.error('locationService: Stedsnavn kan ikke være tomt for addLocation.');
+            return null;
+        }
+
+        // Validering av nye felter
+        if (!locationData.address || locationData.address.trim() === '') {
+            AppLogger.error('locationService: Adresse kan ikke være tom for addLocation.');
+            return null;
+        }
+
+        if (!locationData.estimatedTime || isNaN(locationData.estimatedTime) || locationData.estimatedTime <= 0) {
+            AppLogger.error('locationService: Estimert tid må være et gyldig tall større enn 0 for addLocation.');
             return null;
         }
 
@@ -23,6 +32,8 @@ AppServices.locations = (function() {
         try {
             const payload = {
                 name: locationData.name.trim(),
+                address: locationData.address.trim(),
+                estimatedTime: parseFloat(locationData.estimatedTime),
                 isArchived: false, 
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
@@ -289,6 +300,41 @@ async function getTimeEntriesForLocation(locationId) {
         }
     }
 
+    // NYTT: Funksjon for å oppdatere et eksisterende sted med nye felter
+    /**
+     * Oppdaterer et eksisterende sted med nye felter.
+     * @param {string} locationId - ID-en til stedet som skal oppdateres.
+     * @param {object} updateData - Objekt med felter som skal oppdateres (f.eks. name, address, estimatedTime).
+     * @returns {Promise<boolean>} True ved suksess, false ved feil.
+     */
+    async function updateLocation(locationId, updateData) {
+        AppLogger.info('locationService: Oppdaterer sted med ID:', locationId, updateData);
+        if (!locationId || !updateData || typeof updateData !== 'object') {
+            AppLogger.error('locationService: Mangler locationId eller updateData for updateLocation.');
+            return false;
+        }
+        try {
+            // Fjern eventuelle ugyldige felter
+            const allowedFields = ['name', 'address', 'estimatedTime'];
+            const updatePayload = {};
+            allowedFields.forEach(field => {
+                if (field in updateData) {
+                    updatePayload[field] = updateData[field];
+                }
+            });
+            if (Object.keys(updatePayload).length === 0) {
+                AppLogger.warn('locationService: Ingen gyldige felter å oppdatere for updateLocation.');
+                return false;
+            }
+            await locationsCollection.doc(locationId).update(updatePayload);
+            AppLogger.info('locationService: Sted oppdatert:', locationId);
+            return true;
+        } catch (error) {
+            AppLogger.error('locationService: Feil ved oppdatering av sted:', locationId, error);
+            return false;
+        }
+    }
+
     // Offentlig API for locationService
 
     return {
@@ -299,6 +345,7 @@ async function getTimeEntriesForLocation(locationId) {
         getTimeEntriesForLocation: getTimeEntriesForLocation, // Beholder denne hvis den trengs for totalberegninger
         restoreLocation: restoreLocation,
         getTimeEntriesForLocationByWeekYear: getTimeEntriesForLocationByWeekYear, // NYTT
-        deleteLocation: deleteLocation
+        deleteLocation: deleteLocation,
+        updateLocation: updateLocation // NYTT
     };
 })();

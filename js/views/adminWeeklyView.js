@@ -214,7 +214,6 @@ AppViews.weekly = (function() {
                 row.setAttribute('data-id', data.location.id);
 
                 row.insertCell().textContent = data.location.name || 'Ukjent Navn';
-                  // Status cell with green styling for completed jobs and red for remaining
                 const statusCell = row.insertCell();
                 statusCell.textContent = data.statusText;
                 if (data.statusText === "Fullført") {
@@ -224,37 +223,12 @@ AppViews.weekly = (function() {
                     statusCell.classList.add('status-gjenstar');
                     statusCell.setAttribute('data-status', 'gjenstar');
                 }
-                
-                row.insertCell().textContent = data.DATO_DM;   // NYTT
-                row.insertCell().textContent = data.UKEDAG;    // NYTT
-                row.insertCell().textContent = data.performedBy;
+                row.insertCell().textContent = data.DATO_DM;
+                row.insertCell().textContent = data.UKEDAG;
                 row.insertCell().textContent = data.edgingDisplay;
-                row.insertCell().textContent = `${data.weeklyHours.toFixed(1)} t`;                const actionsCell = row.insertCell();
-                const archiveButton = document.createElement('button');
-                archiveButton.className = 'Btn button-archive';
-                archiveButton.setAttribute('data-id', data.location.id);
-                
-                // Create the expandable button structure
-                const svgWrapper = document.createElement('div');
-                svgWrapper.className = 'svgWrapper';
-                  const svgIcon = document.createElement('div');
-                svgIcon.className = 'svgIcon';
-                svgIcon.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 8v13H3V8"/>
-                        <path d="M1 3h22v5H1z"/>
-                        <path d="M10 12l4-4 4 4"/>
-                    </svg>
-                `;
-                
-                const text = document.createElement('span');
-                text.className = 'text';
-                text.textContent = 'Arkiver';
-                
-                svgWrapper.appendChild(svgIcon);
-                archiveButton.appendChild(svgWrapper);
-                archiveButton.appendChild(text);
-                actionsCell.appendChild(archiveButton);
+                row.insertCell().textContent = `${data.weeklyHours.toFixed(1)} t`;
+                row.insertCell().textContent = data.performedBy;
+                // Fjernet actionsCell og archiveButton
             });
 
             AppLogger.info('adminWeeklyView: Aktive steder med ukedata vist i tabellen.');
