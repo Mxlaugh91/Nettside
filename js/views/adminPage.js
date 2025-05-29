@@ -295,10 +295,9 @@ async function handleRestoreButtonClick(event) {
             e.preventDefault();
             const href = this.getAttribute('href').replace('#', '');
             showSectionByNav(href);
-        });
-    });
-    // Vis "Steder" som standard
-    showSectionByNav('steder');
+        });    });
+    // Vis "Oversikt" som standard ved innlogging
+    showSectionByNav('oversikt');
     // --- Sidebeskyttelse, Rolle-sjekk og Initiering ---
     AppServices.auth.onAuthStateChanged(async firebaseUser => {
         if (firebaseUser) {
