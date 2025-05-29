@@ -121,11 +121,19 @@ class AdministrerLokasjoner {
             'default': '📍'
         };
         return icons[type] || icons.default;
-    }
-
-    // Hent informasjon om lokasjon
+    }    // Hent informasjon om lokasjon
     getLocationInfo(location) {
         let info = [];
+
+        // Vis adresse (fra ny funksjonalitet)
+        if (location.address) {
+            info.push(`<strong>Adresse:</strong> ${this.escapeHtml(location.address)}`);
+        }
+
+        // Vis estimert tid (fra ny funksjonalitet)
+        if (location.estimatedTime && location.estimatedTime > 0) {
+            info.push(`<strong>Estimert tid:</strong> ${location.estimatedTime} timer`);
+        }
 
         if (location.area) {
             info.push(`<strong>Område:</strong> ${this.escapeHtml(location.area)}`);
