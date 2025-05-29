@@ -262,10 +262,9 @@ async function handleRestoreButtonClick(event) {
         AppLogger.info('AdminPage: Event listener for Gjenopprett-knapper er aktivert på containeren #archived-locations-list-container (også for arkivseksjonen).');    } else { AppLogger.warn('AdminPage: #archivedLocationsListContainer ikke funnet for gjenopprett-lytter.'); }
 
     // --- Navigasjonslogikk: Vis kun valgt seksjon ---
-    function showSectionByNav(navId) {
-        const sections = document.querySelectorAll('.dashboard-main-content > section');
+    function showSectionByNav(navId) {        const sections = document.querySelectorAll('.dashboard-main-content > section');
         sections.forEach(section => section.style.display = 'none');
-        const navItems = document.querySelectorAll('.admin-navbar .nav-item');
+        const navItems = document.querySelectorAll('.dashboard-navbar .nav-item');
         navItems.forEach(item => item.classList.remove('active'));
         if (navId === 'oversikt') {
             document.getElementById('oversikt').style.display = '';
@@ -288,9 +287,8 @@ async function handleRestoreButtonClick(event) {
             document.getElementById('kostnadsoversikt').style.display = '';
             navItems[5].classList.add('active');
         }
-    }
-    // Sett opp event listeners for nav
-    document.querySelectorAll('.admin-navbar .nav-item a').forEach(link => {
+    }    // Sett opp event listeners for nav
+    document.querySelectorAll('.dashboard-navbar .nav-item a').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const href = this.getAttribute('href').replace('#', '');

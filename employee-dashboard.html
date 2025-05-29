@@ -1,1 +1,216 @@
-faen hva er det som skjer
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ansatt Dashboard - Plenpilot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/employee.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+</head>
+<body class="dashboard-body">
+    <div class="dashboard-page-container">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>🏠 Mitt Dashboard</h1>
+                <div class="user-info">
+                    <span id="employee-email">Laster...</span>
+                    <button id="employee-logout-button" class="button button-danger">Logg ut</button>
+                </div>
+            </div>
+        </header>
+
+        <nav class="dashboard-navbar">
+            <ul>
+                <li class="nav-item active"><a href="#oversikt">📋 Mine Oppgaver</a></li>
+                <li class="nav-item"><a href="#registrer-timer">⏱️ Registrer Timer</a></li>
+                <li class="nav-item"><a href="#historikk">📊 Min Historikk</a></li>
+            </ul>
+        </nav>
+
+        <main class="dashboard-main-content">
+            <!-- Mine Oppgaver Section -->
+            <section id="oversikt" class="card-style" style="display:block;">
+                <h2>📋 Mine Oppgaver</h2>
+                <div class="employee-tasks-overview">
+                    <div class="tasks-header">
+                        <div class="week-info">
+                            <span class="current-week">Uke <span id="current-week-number">--</span></span>
+                            <span class="week-status" id="week-completion-status">0 av 0 fullført</span>
+                        </div>
+                        <div class="tasks-quick-stats">
+                            <div class="stat-item">
+                                <span class="stat-number" id="pending-tasks">0</span>
+                                <span class="stat-label">Gjenstår</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="completed-tasks">0</span>
+                                <span class="stat-label">Fullført</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tasks-grid" id="tasks-grid">
+                        <div class="loading-message">
+                            <div class="loading-spinner"></div>
+                            <p>Laster dine oppgaver...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Registrer Timer Section -->
+            <section id="registrer-timer" class="card-style" style="display:none;">
+                <h2>⏱️ Registrer Timer</h2>
+                <div class="time-entry-container">
+                    <div class="quick-actions">
+                        <h3>Hurtig registrering</h3>
+                        <p>Velg et sted og registrer timer for dagens arbeid</p>
+                    </div>
+                    
+                    <form id="time-entry-form" class="time-entry-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="location-select">📍 Velg sted</label>
+                                <select id="location-select" name="locationId" required>
+                                    <option value="">Velg klippested...</option>
+                                    <!-- Dynamic options -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="work-date">📅 Arbeidsdato</label>
+                                <input type="date" id="work-date" name="workDate" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="hours-worked">⏰ Timer arbeidet</label>
+                                <input type="number" id="hours-worked" name="hoursWorked" 
+                                       min="0.1" step="0.1" max="24" required 
+                                       placeholder="F.eks. 2.5">
+                            </div>
+                            <div class="form-group">
+                                <label for="task-completed">✅ Status</label>
+                                <select id="task-completed" name="taskCompleted" required>
+                                    <option value="false">Pågående arbeid</option>
+                                    <option value="true">Fullført for uken</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="work-notes">📝 Notater (valgfritt)</label>
+                            <textarea id="work-notes" name="notes" rows="3" 
+                                      placeholder="Beskriv utført arbeid, utfordringer, eller andre viktige detaljer..."></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="button button-primary">
+                                <span class="button-icon">💾</span>
+                                Registrer Timer
+                            </button>
+                            <button type="reset" class="button button-secondary">
+                                <span class="button-icon">🔄</span>
+                                Nullstill
+                            </button>
+                        </div>
+                        
+                        <div id="time-entry-feedback" class="feedback-message" style="display:none;"></div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Min Historikk Section -->
+            <section id="historikk" class="card-style" style="display:none;">
+                <h2>📊 Min Historikk</h2>
+                <div class="history-container">
+                    <div class="history-filters">
+                        <div class="filter-group">
+                            <label for="history-month">📅 Måned</label>
+                            <select id="history-month">
+                                <option value="">Alle måneder</option>
+                                <!-- Dynamic options -->
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="history-location">📍 Sted</label>
+                            <select id="history-location">
+                                <option value="">Alle steder</option>
+                                <!-- Dynamic options -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="history-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">⏰</div>
+                            <div class="stat-content">
+                                <span class="stat-number" id="total-hours">0</span>
+                                <span class="stat-label">Total timer</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📍</div>
+                            <div class="stat-content">
+                                <span class="stat-number" id="total-locations">0</span>
+                                <span class="stat-label">Steder jobbet</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-content">
+                                <span class="stat-number" id="completed-weeks">0</span>
+                                <span class="stat-label">Fullførte uker</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="history-table-container">
+                        <table class="data-table employee-history-table">
+                            <thead>
+                                <tr>
+                                    <th>Dato</th>
+                                    <th>Sted</th>
+                                    <th>Timer</th>
+                                    <th>Status</th>
+                                    <th>Notater</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-table-body">
+                                <tr>
+                                    <td colspan="5" style="text-align:center; padding: 2rem;">
+                                        <div class="loading-spinner"></div>
+                                        <p>Laster historikk...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="dashboard-footer">
+            <p>&copy; <span id="current-year">2025</span> Plenpilot. Med enerett.</p>
+        </footer>
+    </div>
+
+    <script defer src="js/core/firebase-init.js"></script>
+    <script defer src="js/core/logger.js"></script>
+    <script defer src="js/services/authService.js"></script>
+    <script defer src="js/services/userService.js"></script>
+    <script defer src="js/services/locationService.js"></script>
+    <script defer src="js/services/timeEntryService.js"></script>
+    <script defer src="js/views/EmployeePage.js"></script>
+    <script defer src="js/main.js"></script>
+</body>
+</html>

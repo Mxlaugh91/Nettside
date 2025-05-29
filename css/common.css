@@ -9,7 +9,8 @@
     --accent-blue: #2d5aa0;
     --text-primary: #1a365d;      /* Standard for lys modus */
     --text-secondary: #4a5568;    /* Standard for lys modus */
-    --text-light: #f0f0f0;
+    --text-light: #e2e8f0;        /* Dashboard light text */
+    --text-dashboard: #e2e8f0;    /* Dashboard text color */
     --background-overlay: rgba(0, 0, 0, 0.6); /* Ofte brukt på login, men kan være global */
     --glass-background: rgba(240, 240, 240, 0.95); /* Glass-effekt lys modus */
     --glass-border: rgba(255, 255, 255, 0.2);   /* Glass-effekt lys modus */
@@ -19,6 +20,16 @@
     --border-radius: 12px;
     --border-radius-large: 20px;
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Dashboard-specific variables */
+    --dashboard-bg-primary: rgba(26, 32, 44, 0.95);
+    --dashboard-bg-secondary: rgba(45, 55, 72, 0.92);
+    --dashboard-glass-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 15px 30px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 0 1px rgba(66, 153, 225, 0.2);
+    --dashboard-border: 1px solid rgba(66, 153, 225, 0.3);
+    --dashboard-blue: #4299e1;
+    --dashboard-blue-light: #bee3f8;
+    --dashboard-blue-dark: #3182ce;
+    --dashboard-backdrop: blur(15px);
     
     /* Du kan legge til globale font-variabler her: */
     --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Lato', 'Helvetica Neue', Arial, sans-serif;
@@ -305,5 +316,302 @@ label {
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+
+/* ==========================================================================
+   Dashboard Common Styles
+   ========================================================================== */
+
+/* Dashboard Body Background */
+.dashboard-body {
+    font-family: 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-dashboard);
+    background:
+        linear-gradient(rgba(0, 20, 10, 0.8), rgba(10, 30, 15, 0.9)),
+        url("https://images.pexels.com/photos/580900/pexels-photo-580900.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Dashboard Page Container */
+.dashboard-page-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    background: var(--dashboard-bg-primary);
+    backdrop-filter: var(--dashboard-backdrop);
+    border-radius: var(--border-radius-large) var(--border-radius-large) 0 0;
+    box-shadow: var(--dashboard-glass-shadow);
+    border: var(--dashboard-border);
+    color: var(--text-dashboard);
+    padding: 2rem 2rem 1.2rem 2rem;
+    margin-bottom: 0;
+    position: relative;
+    border-bottom: none;
+}
+
+.dashboard-header .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.dashboard-header h1 {
+    font-size: 2.1rem;
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    color: #2A4365;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    padding-bottom: 2px;
+}
+
+.user-info #admin-email,
+.user-info .user-email {
+    margin-right: 1.25rem;
+    font-size: 0.95rem;
+    opacity: 0.95;
+    background-color: rgba(66, 153, 225, 0.2);
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--border-radius);
+    color: var(--dashboard-blue-light);
+    border: 1px solid rgba(66, 153, 225, 0.3);
+}
+
+.dashboard-header .button {
+    background: linear-gradient(135deg, var(--dashboard-blue) 0%, var(--dashboard-blue-dark) 100%);
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    padding: 0.7rem 1.3rem;
+    font-size: 1.05rem;
+    box-shadow: 0 2px 8px 0 rgba(66, 153, 225, 0.13);
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+
+.dashboard-header .button:hover {
+    background: linear-gradient(135deg, var(--dashboard-blue-dark) 0%, #2b6cb0 100%);
+    color: var(--text-dashboard);
+    box-shadow: 0 4px 16px 0 rgba(66, 153, 225, 0.18);
+}
+
+/* Dashboard Navigation */
+.dashboard-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2rem;
+    background: var(--dashboard-bg-primary);
+    backdrop-filter: var(--dashboard-backdrop);
+    border-bottom: 2px solid rgba(66, 153, 225, 0.3);
+    box-shadow: var(--dashboard-glass-shadow);
+    border: var(--dashboard-border);
+    border-top: none;
+    padding: 0.5rem 2rem;
+    position: relative;
+    border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+    margin-bottom: 2.5rem;
+}
+
+.dashboard-navbar ul {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-navbar .nav-item a {
+    color: #cbd5e0;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.dashboard-navbar .nav-item.active a,
+.dashboard-navbar .nav-item a:hover {
+    background: rgba(66, 153, 225, 0.2);
+    color: var(--text-dashboard);
+}
+
+/* Week Selector */
+.week-selector-group {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.week-selector-group label {
+    font-weight: 500;
+    color: #cbd5e0;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.week-selector-group select {
+    padding: 0.6rem 2.5rem 0.6rem 1rem;
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(66, 153, 225, 0.3);
+    font-size: 0.95rem;
+    min-width: 130px;
+    background: var(--dashboard-bg-primary);
+    backdrop-filter: var(--dashboard-backdrop);
+    color: var(--text-dashboard);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%23e2e8f0' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    background-size: 0.85em;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2),
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    font-weight: 500;
+}
+
+.week-selector-group select:hover {
+    border-color: rgba(66, 153, 225, 0.5);
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.2),
+        0 2px 6px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
+}
+
+/* Dashboard Card Style Override */
+.dashboard-body .card-style {
+    background: var(--dashboard-bg-primary);
+    padding: 2rem 2.5rem;
+    box-shadow: var(--dashboard-glass-shadow);
+    border-radius: var(--border-radius-large);
+    border: var(--dashboard-border);
+    backdrop-filter: var(--dashboard-backdrop);
+    color: var(--text-dashboard);
+    transition: var(--transition-smooth);
+}
+
+/* Dashboard Data Tables */
+.dashboard-body .data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--dashboard-bg-primary);
+    font-size: 1rem;
+    box-shadow: var(--dashboard-glass-shadow);
+    border: var(--dashboard-border);
+    border-radius: var(--border-radius);
+    backdrop-filter: var(--dashboard-backdrop);
+    overflow: hidden;
+}
+
+.dashboard-body .data-table th {
+    background: rgba(45, 55, 72, 0.6);
+    color: var(--text-dashboard);
+    font-weight: 700;
+    border: none;
+    border-bottom: 1px solid rgba(66, 153, 225, 0.3);
+    padding: 1.1rem 1rem;
+    font-size: 1rem;
+    letter-spacing: 0.01em;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    position: relative;
+    text-align: center;
+}
+
+.dashboard-body .data-table td {
+    background: rgba(26, 32, 44, 0.8);
+    border-bottom: 1px solid rgba(66, 153, 225, 0.2);
+    padding: 1rem 1rem;
+    font-size: 0.97rem;
+    color: var(--text-dashboard);
+    transition: all 0.3s ease;
+    position: relative;
+    text-align: center;
+}
+
+.dashboard-body .data-table tbody tr:hover {
+    background: rgba(66, 153, 225, 0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.15);
+}
+
+.dashboard-body .data-table tbody tr:hover td {
+    background: rgba(66, 153, 225, 0.15);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Dashboard Form Elements */
+.dashboard-body input[type="text"],
+.dashboard-body input[type="email"],
+.dashboard-body input[type="password"],
+.dashboard-body input[type="number"],
+.dashboard-body select {
+    padding: 0.7rem 1rem;
+    border: 1.5px solid rgba(66, 153, 225, 0.4);
+    background: rgba(45, 55, 72, 0.8);
+    color: var(--text-dashboard);
+    border-radius: 8px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.dashboard-body input[type="text"]:focus,
+.dashboard-body input[type="email"]:focus,
+.dashboard-body input[type="password"]:focus,
+.dashboard-body input[type="number"]:focus,
+.dashboard-body select:focus {
+    border-color: rgba(66, 153, 225, 0.7);
+    background: rgba(45, 55, 72, 0.9);
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2), 0 5px 15px rgba(66, 153, 225, 0.15);
+    color: var(--text-dashboard);
+}
+
+.dashboard-body label {
+    color: var(--text-dashboard);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Dashboard Footer */
+.dashboard-footer {
+    text-align: center;
+    padding: 2.5rem 0;
+    margin-top: 3rem;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+    border-top: 1px solid rgba(34, 197, 94, 0.3);
+    background: transparent;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Dashboard Main Content */
+.dashboard-main-content section {
+    margin-bottom: 2.5rem;
+}
+
+.dashboard-main-content section:last-of-type {
+    margin-bottom: 0;
 }
 

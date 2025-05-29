@@ -1,21 +1,6 @@
-/* Admin Dashboard - Consistent text colors matching login.css */
+/* Admin Dashboard - Admin-specific styles */
 
-.dashboard-body {
-    font-family: 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: #e2e8f0; /* Blue/gray light text color */
-    background:
-        linear-gradient(rgba(0, 20, 10, 0.8), rgba(10, 30, 15, 0.9)),
-        url("https://images.pexels.com/photos/580900/pexels-photo-580900.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    min-height: 100vh;
-    position: relative;
-    overflow-x: hidden;
-}
-
+/* Admin-specific page container adjustments */
 .admin-page-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -24,41 +9,18 @@
     z-index: 1;
 }
 
-
-
-.dashboard-header {
-    background: rgba(26, 32, 44, 0.95);
-    backdrop-filter: blur(15px);
-    border-radius: 20px 20px 0 0;
-    box-shadow: 
-        0 25px 50px rgba(0, 0, 0, 0.4),
-        0 15px 30px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        0 0 0 1px rgba(66, 153, 225, 0.2);
-    border: 1px solid rgba(66, 153, 225, 0.3);
-    color: #e2e8f0;
-    padding: 2rem 2rem 1.2rem 2rem;
-    margin-bottom: 0;
-    position: relative;
-    border-bottom: none;
-}
-.dashboard-header .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0;
-}
+/* Admin-specific header title styling */
 .dashboard-header h1.pro-style-2 {
   font-size: 2.1rem;
   margin: 0;
-  font-weight: 600; /* Litt mindre "tung" enn 700, kan virke mer elegant */
-  letter-spacing: 0.005em; /* Enda mer subtil, eller fjern */
-  color: #2A4365; /* En dyp, profesjonell blågrå farge. Velg en som passer din palett. */
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1); /* Veldig lett skygge for å løfte teksten litt */
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  color: #2A4365;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
   padding-bottom: 2px;
 }
+
+/* Admin-specific email styling */
 .user-info #admin-email {
     margin-right: 1.25rem;
     font-size: 0.95rem;
@@ -80,111 +42,12 @@
     box-shadow: 0 2px 8px 0 rgba(66, 153, 225, 0.13);
     transition: background 0.18s, color 0.18s, box-shadow 0.18s;
 }
-.dashboard-header .button:hover {
-    background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
-    color: #e2e8f0;
-    box-shadow: 0 4px 16px 0 rgba(66, 153, 225, 0.18);
-}
-
+/* Admin-specific dashboard main content styling */
 .dashboard-main-content section {
     margin-bottom: 2.5rem;
 }
 .dashboard-main-content section:last-of-type {
     margin-bottom: 0;
-}
-
-.admin-navbar {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 2rem;
-    background: rgba(26, 32, 44, 0.95);
-    backdrop-filter: blur(15px);
-    border-bottom: 2px solid rgba(66, 153, 225, 0.3);
-    box-shadow: 
-        0 25px 50px rgba(0, 0, 0, 0.4),
-        0 15px 30px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        0 0 0 1px rgba(66, 153, 225, 0.2);    border: 1px solid rgba(66, 153, 225, 0.3);
-    border-top: none;
-    padding: 0.5rem 2rem;
-    position: relative;
-    border-radius: 0 0 20px 20px;
-    margin-bottom: 2.5rem;
-}
-.admin-navbar ul {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-.admin-navbar .nav-item a {
-    color: #cbd5e0;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    transition: background 0.2s, color 0.2s;
-}
-.admin-navbar .nav-item.active a,
-.admin-navbar .nav-item a:hover {
-    background: rgba(66, 153, 225, 0.2);
-    color: #e2e8f0;
-}
-.admin-navbar .week-selector-group {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-.admin-navbar .week-selector-group label {
-    font-weight: 500;
-    color: #cbd5e0;
-    font-size: 0.95rem;
-    margin: 0;
-}
-.admin-navbar .week-selector-group select {
-    padding: 0.6rem 2.5rem 0.6rem 1rem;
-    border-radius: 12px;
-    border: 1px solid rgba(66, 153, 225, 0.3);
-    font-size: 0.95rem;
-    min-width: 130px;
-    background: rgba(26, 32, 44, 0.95);
-    backdrop-filter: blur(15px);
-    color: #e2e8f0;
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%23e2e8f0' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.8rem center;
-    background-size: 0.85em;    transition: all 0.3s ease;
-    box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.2),
-        0 2px 4px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    font-weight: 500;
-}
-
-.admin-navbar .week-selector-group select:hover {
-    border-color: rgba(66, 153, 225, 0.5);
-    box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.2),
-        0 2px 6px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    transform: translateY(-1px);
-}
-
-.dashboard-footer {
-    text-align: center;
-    padding: 2.5rem 0;
-    margin-top: 3rem;
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.8); /* Match login.css footer color */
-    border-top: 1px solid rgba(34, 197, 94, 0.3);
-    background: transparent;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .add-location-section.card-style {
@@ -310,7 +173,7 @@
 /* Light sections keep dark blue text */
 .card-style,
 .dashboard-header,
-.admin-navbar,
+.dashboard-navbar,
 .add-location-section.card-style {
     color: #2b6cb0;
 }
@@ -341,7 +204,7 @@
 
 /* Ensure form labels in light sections use proper color */
 .add-location-section label,
-.admin-navbar label {
+.dashboard-navbar label {
     color: #cbd5e0; /* Label color from login.css for consistency */
 }
 
@@ -404,29 +267,7 @@
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-/* Table styling to match admin blue/gray theme */
-.data-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: rgba(26, 32, 44, 0.95);
-    font-size: 1rem;
-    box-shadow: 
-        0 25px 50px rgba(0, 0, 0, 0.4),
-        0 15px 30px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        0 0 0 1px rgba(66, 153, 225, 0.2);
-    border: 1px solid rgba(66, 153, 225, 0.3);
-    border-radius: 12px;
-    backdrop-filter: blur(15px);
-    overflow: hidden;
-}
-
-.data-table th,
-.data-table td {
-    text-align: center;
-}
-
+/* Admin-specific data table enhancements */
 /* Add a subtle animated gradient border */
 .data-table::before {
     content: '';
@@ -451,19 +292,6 @@
     50% { background-position: 100% 50%; }
 }
 
-.data-table th {
-    background: rgba(45, 55, 72, 0.6);
-    color: #e2e8f0;
-    font-weight: 700;
-    border: none;
-    border-bottom: 1px solid rgba(66, 153, 225, 0.3);
-    padding: 1.1rem 1rem;
-    font-size: 1rem;
-    letter-spacing: 0.01em;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-    position: relative;
-}
-
 /* Add header separator lines */
 .data-table th:not(:last-child)::after {
     content: '';
@@ -475,29 +303,7 @@
     background: rgba(66, 153, 225, 0.3);
 }
 
-.data-table td {
-    background: rgba(26, 32, 44, 0.8);
-    border-bottom: 1px solid rgba(66, 153, 225, 0.2);
-    padding: 1rem 1rem;
-    font-size: 0.97rem;
-    color: #e2e8f0;
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-/* Add subtle cell animations on hover */
-.data-table tbody tr:hover {
-    background: rgba(66, 153, 225, 0.1);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.15);
-}
-
-.data-table tbody tr:hover td {
-    background: rgba(66, 153, 225, 0.15);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-/* Enhanced table styling */
+/* Admin-specific data table enhancements */
 
 /* Add data visualization bars for numeric columns */
 .data-table td[data-type="hours"]::after {
@@ -571,7 +377,7 @@ textarea:focus {
 }
 
 /* Week selector focus state - specific styling */
-.admin-navbar .week-selector-group select:focus {
+.dashboard-navbar .week-selector-group select:focus {
     outline: none !important;
     border-color: rgba(66, 153, 225, 0.6) !important;
     box-shadow: 
@@ -675,13 +481,13 @@ textarea:focus {
     scrollbar-width: none;
 }
 
-/* Also hide scrollbar in admin navbar week selector if it exists */
-.admin-navbar .week-selector-group select::-webkit-scrollbar {
+/* Also hide scrollbar in dashboard navbar week selector if it exists */
+.dashboard-navbar .week-selector-group select::-webkit-scrollbar {
     width: 0px;
     background: transparent;
 }
 
-.admin-navbar .week-selector-group select {
+.dashboard-navbar .week-selector-group select {
     scrollbar-width: none;
 }
 

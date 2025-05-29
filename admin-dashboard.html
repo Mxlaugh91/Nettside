@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kontrollpanel - Plenpilot</title> <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="css/common.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700&display=swap" rel="stylesheet">    <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/responsive.css">
 
     <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
 <body class="dashboard-body">
-    <div class="page-container admin-page-container">
+    <div class="dashboard-page-container">
         <header class="dashboard-header">
             <div class="header-content">
                 <h1>Kontrollpanel</h1>
@@ -24,7 +23,7 @@
                     <button id="logout-button" class="button button-danger">Logg ut</button>
                 </div>
             </div>
-        </header>        <nav class="admin-navbar">
+        </header>        <nav class="dashboard-navbar">
             <ul>
                 <li class="nav-item active"><a href="#oversikt">Oversikt</a></li>
                 <li class="nav-item"><a href="#steder">Driftsområder</a></li>
