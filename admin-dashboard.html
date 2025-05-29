@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashbord - KlippKontroll</title> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <title>Kontrollpanel - Plenpilot</title> <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -18,7 +18,7 @@
     <div class="page-container admin-page-container">
         <header class="dashboard-header">
             <div class="header-content">
-                <h1>Admin Dashbord</h1>
+                <h1>Kontrollpanel</h1>
                 <div class="user-info">
                     <span id="admin-email">Laster...</span>
                     <button id="logout-button" class="button button-danger">Logg ut</button>
@@ -33,10 +33,24 @@
                 <li class="nav-item"><a href="#arkiv">Arkivet</a></li>
                 <li class="nav-item"><a href="#kostnadsoversikt">Kostnadsoversikt</a></li>
             </ul>
-        </nav>
-
-        <main class="dashboard-main-content">
-                <section id="oversikt" class="card-style" style="display:none;"></section>                <section id="steder" class="card-style" style="display:none;">
+        </nav>        <main class="dashboard-main-content">
+                <section id="oversikt" class="card-style" style="display:none;">
+                    <h2>📊 Oversikt</h2>
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #4299e1; margin-bottom: 1rem;">Velkommen til administrasjonspanelet</h3>
+                        <p style="margin-bottom: 1rem;">Her har du full kontroll over KlippKontroll-systemet. Bruk navigasjonen over for å:</p>
+                        <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem; line-height: 1.8;">
+                            <li><strong>Driftsområder:</strong> Se aktive steder og ukentlig fremdrift</li>
+                            <li><strong>Administrer lokasjoner:</strong> Legg til, rediger eller arkiver klippesteder</li>
+                            <li><strong>Ansatte:</strong> Administrer brukere og tilganger</li>
+                            <li><strong>Arkivet:</strong> Se arkiverte steder og gjenopprett om nødvendig</li>
+                            <li><strong>Kostnadsoversikt:</strong> Få innsikt i driftsøkonomien</li>
+                        </ul>
+                        <div style="background: rgba(66, 153, 225, 0.1); border-left: 4px solid #4299e1; padding: 1rem; border-radius: 8px;">
+                            <p style="margin: 0; color: #2d5aa0;"><strong>💡 Tips:</strong> Start med å sjekke "Driftsområder" for å se dagens oppgaver, eller gå til "Administrer lokasjoner" for å legge til nye klippesteder.</p>
+                        </div>
+                    </div>
+                </section><section id="steder" class="card-style" style="display:none;">
                     <div id="locations-list-container">
                         <div class="locations-table-container card-style locations-table-card" style="margin-top:0;">                            <div class="locations-table-header-row" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 1rem;">
                                 <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600;">Faste Aktive steder</h3>
