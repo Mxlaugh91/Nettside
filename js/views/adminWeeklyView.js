@@ -126,7 +126,9 @@ AppViews.weekly = (function() {
 
             // NYTT: Bruk Promise.all for å hente ukedata for alle steder parallelt (mer effektivt)
             const locationPromises = locations.map(async (location) => {
+                AppLogger.info(`adminWeeklyView: Henter timeoppføringer for sted ${location.name} (${location.id}), uke ${week}, år ${year}`);
                 const weeklyTimeEntries = await AppServices.locations.getTimeEntriesForLocationByWeekYear(location.id, week, year);
+                AppLogger.info(`adminWeeklyView: Antall timeoppføringer for ${location.name} (${location.id}), uke ${week}/${year}: ${weeklyTimeEntries ? weeklyTimeEntries.length : 0}`);
                 AppLogger.debug(`adminWeeklyView: TimeEntries for ${location.name} (uke ${week}/${year}):`, weeklyTimeEntries);
 
                 let statusText = "Gjenstår";
@@ -135,13 +137,11 @@ AppViews.weekly = (function() {
                 let performedBy = "-";
                 let edgingDisplay = "-"; // For "Kanting"-kolonnen
                 let weeklyHours = 0;
-                let completionEntry = null; // Holder på den timeregistreringen som markerer fullføring
-
-                // Finn en eventuell "fullførende" timeregistrering
+                let completionEntry = null; // Holder på den timeregistreringen som markerer fullføring                // Finn en eventuell "fullførende" timeregistrering
                 if (weeklyTimeEntries && weeklyTimeEntries.length > 0) {
                     // Sorter etter createdAt desc for å finne den nyeste hvis flere markerer som fullført
                     // eller baser deg på dateOfWork hvis det er mer relevant. Her tar vi den første vi finner.
-                    completionEntry = weeklyTimeEntries.find(entry => entry.taskMarkedAsCompleted === true);
+                    completionEntry = weeklyTimeEntries.find(entry => entry.taskCompleted === true);
                     
                     // Hvis ingen er eksplisitt markert som fullført, men det finnes oppføringer,
                     // kan vi vurdere å ta den siste oppføringen for "Utført Av" etc.
@@ -151,37 +151,34 @@ AppViews.weekly = (function() {
                         // completionEntry = weeklyTimeEntries.sort((a,b) => b.createdAt.seconds - a.createdAt.seconds)[0]; 
                         // For nå lar vi det være slik at kun eksplisitt fullførte gir detaljer.
                     }
-                }
-
-                if (completionEntry) {
+                }                if (completionEntry) {
                     statusText = "Fullført";
-                    if (completionEntry.dateOfWork) {
+                    if (completionEntry.workDate) {
                         let workDate;
                         // Håndter både Firestore Timestamp og ISO-datostreng
-                        if (completionEntry.dateOfWork.seconds) { // Firestore Timestamp
-                            workDate = new Date(completionEntry.dateOfWork.seconds * 1000);
+                        if (completionEntry.workDate.seconds) { // Firestore Timestamp
+                            workDate = new Date(completionEntry.workDate.seconds * 1000);
                         } else { // Anta ISO-streng e.l.
-                            workDate = new Date(completionEntry.dateOfWork);
+                            workDate = new Date(completionEntry.workDate);
                         }
-                        
                         const dayOfMonth = workDate.getDate().toString().padStart(2, '0');
                         const month = (workDate.getMonth() + 1).toString().padStart(2, '0');
                         DATO_DM = `${dayOfMonth}.${month}`;
-                        
                         let tempUkedag = workDate.toLocaleDateString('nb-NO', { weekday: 'long' });
                         UKEDAG = tempUkedag.charAt(0).toUpperCase() + tempUkedag.slice(1);
                     }
-                    performedBy = completionEntry.employeeName || 'Ukjent';
-							if (completionEntry.edgingDone === true) {
-								edgingDisplay = "Ja";
-							} else {
-								// Hvis oppgaven er fullført, men kanting ikke er gjort
-										edgingDisplay = "Nei"; 
+                    // For å få employee navn, trenger vi å slå opp i users collection
+                    // For nå bruker vi employeeId eller 'Ansatt' som placeholder
+                    performedBy = completionEntry.employeeId ? `Ansatt (${completionEntry.employeeId.substring(0, 8)})` : 'Ukjent';
+                    // Fjerner kanting/edgingDisplay for nå, da feltet ikke finnes
+                    if (completionEntry.edgingDone === true) {
+                        edgingDisplay = "Ja";
+                    } else {
+                        edgingDisplay = "Nei";
                     }
                 } else if (weeklyTimeEntries && weeklyTimeEntries.length > 0) {
                     // Hvis det er oppføringer, men ingen er markert som "fullført",
                     // kan vi sette status til "Påbegynt" eller lignende.
-                    // For nå lar vi den være "Ikke Fullført" hvis ikke eksplisitt markert.
                     // Vi kan fortsatt summere timer.
                 }
 

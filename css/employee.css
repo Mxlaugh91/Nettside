@@ -6,12 +6,12 @@
    EMPLOYEE DASHBOARD SPECIFIC COMPONENTS
    ========================================================================== */
 
-/* Mine Oppgaver Section */
-.employee-tasks-overview {
+/* Faste Steder Section */
+.employee-locations-overview {
     margin-top: 1.5rem;
 }
 
-.tasks-header {
+.locations-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -40,7 +40,7 @@
     color: rgba(226, 232, 240, 0.8);
 }
 
-.tasks-quick-stats {
+.locations-quick-stats {
     display: flex;
     gap: 2rem;
 }
@@ -65,61 +65,62 @@
     margin-top: 0.25rem;
 }
 
-/* Tasks Grid */
-.tasks-grid {
+/* Locations Grid */
+.locations-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
     margin-top: 1rem;
 }
 
-.task-card {
+.location-card {
     background: var(--dashboard-bg-primary);
     border: var(--dashboard-border);
     border-radius: var(--border-radius);
     padding: 1.5rem;
     backdrop-filter: var(--dashboard-backdrop);
     transition: var(--transition-smooth);
+    cursor: pointer;
 }
 
-.task-card:hover {
+.location-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(66, 153, 225, 0.15);
 }
 
-.task-card-header {
+.location-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
 }
 
-.task-location {
+.location-name {
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--text-dashboard);
 }
 
-.task-status {
+.location-status {
     padding: 0.3rem 0.7rem;
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 500;
 }
 
-.task-status.pending {
+.location-status.pending {
     background: rgba(251, 191, 36, 0.2);
     color: #fbbf24;
     border: 1px solid rgba(251, 191, 36, 0.3);
 }
 
-.task-status.completed {
+.location-status.completed {
     background: rgba(34, 197, 94, 0.2);
     color: #22c55e;
     border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
-.task-card-content {
+.location-card-content {
     color: rgba(226, 232, 240, 0.9);
     font-size: 0.9rem;
 }
@@ -415,22 +416,22 @@
 
 /* Tablets - up to 768px */
 @media screen and (max-width: 768px) {
-    /* Tasks header responsive */
-    .tasks-header {
+    /* Locations header responsive */
+    .locations-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
         padding: 1.2rem;
     }
     
-    .tasks-quick-stats {
+    .locations-quick-stats {
         width: 100%;
         justify-content: space-around;
         gap: 1rem;
     }
     
-    /* Tasks grid responsive */
-    .tasks-grid {
+    /* Locations grid responsive */
+    .locations-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
     }
@@ -484,11 +485,11 @@
 /* Phones - up to 480px */
 @media screen and (max-width: 480px) {
     /* Ultra compact for small screens */
-    .tasks-header {
+    .locations-header {
         padding: 1rem;
     }
     
-    .tasks-quick-stats {
+    .locations-quick-stats {
         flex-direction: column;
         align-items: center;
         gap: 0.75rem;
@@ -582,7 +583,7 @@
 /* Touch-friendly improvements */
 @media (hover: none) and (pointer: coarse) {
     /* Touch device optimizations */
-    .task-card,
+    .location-card,
     .stat-card,
     .button {
         -webkit-tap-highlight-color: rgba(66, 153, 225, 0.2);
@@ -594,7 +595,7 @@
         font-size: 16px; /* Prevents zoom on iOS */
     }
     
-    .tasks-quick-stats {
+    .locations-quick-stats {
         padding: 1rem 0;
     }
     
@@ -615,7 +616,7 @@
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-    .task-card,
+    .location-card,
     .stat-card,
     .button,
     .loading-spinner {
@@ -631,12 +632,12 @@
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
-    .task-status.pending {
+    .location-status.pending {
         background: #fbbf24;
         color: #000;
     }
     
-    .task-status.completed {
+    .location-status.completed {
         background: #22c55e;
         color: #000;
     }

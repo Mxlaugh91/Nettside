@@ -1,0 +1,47 @@
+// Updated Firebase Security Rules for Employee Dashboard
+// Apply these rules in your Firebase Console under Firestore Database > Rules
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users collection - only users can read/write their own data, admins can read all
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null && 
+                     get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Locations collection - FIXED: Uncommented employee read permissions
+    match /locations/{locationId} {
+      // Admin can read and write all locations
+      allow read, write: if request.auth != null &&
+                            get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      
+      // EMPLOYEES CAN NOW READ ACTIVE LOCATIONS (previously commented out)
+      allow read: if request.auth != null &&
+                     (
+                       (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin') ||
+                       (
+                         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'employee' &&
+                         resource.data.isArchived == false 
+                       )
+                     );
+    }
+    
+    // Time Entries collection - FIXED: Uncommented employee permissions
+    match /timeEntries/{timeEntryId} {
+      // Admin can read and write all time entries
+      allow read, write: if request.auth != null &&
+                            get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+        // EMPLOYEES CAN NOW CREATE AND READ THEIR OWN TIME ENTRIES (previously commented out)
+      allow create: if request.auth != null &&
+                       get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'employee' &&
+                       request.resource.data.employeeId == request.auth.uid;
+      
+      allow read, update: if request.auth != null &&
+                             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'employee' &&
+                             resource.data.employeeId == request.auth.uid;
+    }
+  }
+}

@@ -17,8 +17,7 @@
     <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
 <body class="dashboard-body">
-    <div class="dashboard-page-container">
-        <header class="dashboard-header">
+    <div class="dashboard-page-container">        <header class="dashboard-header">
             <div class="header-content">
                 <h1>🏠 Mitt Dashboard</h1>
                 <div class="user-info">
@@ -26,42 +25,41 @@
                     <button id="employee-logout-button" class="button button-danger">Logg ut</button>
                 </div>
             </div>
-        </header>
-
-        <nav class="dashboard-navbar">
+        </header><nav class="dashboard-navbar">
             <ul>
-                <li class="nav-item active"><a href="#oversikt">📋 Mine Oppgaver</a></li>
+                <li class="nav-item active"><a href="#faste-steder">📍 Faste Steder</a></li>
                 <li class="nav-item"><a href="#registrer-timer">⏱️ Registrer Timer</a></li>
                 <li class="nav-item"><a href="#historikk">📊 Min Historikk</a></li>
             </ul>
-        </nav>
-
-        <main class="dashboard-main-content">
-            <!-- Mine Oppgaver Section -->
-            <section id="oversikt" class="card-style" style="display:block;">
-                <h2>📋 Mine Oppgaver</h2>
-                <div class="employee-tasks-overview">
-                    <div class="tasks-header">
+        </nav>        <main class="dashboard-main-content">
+            <!-- Faste Steder Section -->
+            <section id="faste-steder" class="card-style" style="display:block;">
+                <h2>📍 Faste Steder</h2>
+                <div class="employee-locations-overview">
+                    <div class="locations-header">
                         <div class="week-info">
-                            <span class="current-week">Uke <span id="current-week-number">--</span></span>
-                            <span class="week-status" id="week-completion-status">0 av 0 fullført</span>
+                            <label for="employee-week-select" style="font-weight:600; margin-right:0.5em;">Uke</label>
+                            <select id="employee-week-select" name="employee-week-select" style="font-size:1em; padding:0.2em 0.5em; border-radius:6px;">
+                                <!-- Ukevalg fylles av JS -->
+                            </select>
+                            <span class="current-week" style="margin-left:0.5em;">(Valgt uke: <span id="current-week-number">--</span>)</span>
                         </div>
-                        <div class="tasks-quick-stats">
+                        <div class="locations-quick-stats">
                             <div class="stat-item">
-                                <span class="stat-number" id="pending-tasks">0</span>
+                                <span class="stat-number" id="pending-locations">0</span>
                                 <span class="stat-label">Gjenstår</span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-number" id="completed-tasks">0</span>
+                                <span class="stat-number" id="completed-locations">0</span>
                                 <span class="stat-label">Fullført</span>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="tasks-grid" id="tasks-grid">
+                    <div class="locations-grid" id="locations-grid">
                         <div class="loading-message">
                             <div class="loading-spinner"></div>
-                            <p>Laster dine oppgaver...</p>
+                            <p>Laster faste steder...</p>
                         </div>
                     </div>
                 </div>
@@ -105,6 +103,13 @@
                                     <option value="true">Fullført for uken</option>
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label for="edging-done">✂️ Kanting utført?</label>
+                                <select id="edging-done" name="edgingDone" required>
+                                    <option value="false">Nei</option>
+                                    <option value="true">Ja</option>
+                                </select>
+                            </div>
                         </div>
                         
                         <div class="form-group">
@@ -112,8 +117,7 @@
                             <textarea id="work-notes" name="notes" rows="3" 
                                       placeholder="Beskriv utført arbeid, utfordringer, eller andre viktige detaljer..."></textarea>
                         </div>
-                        
-                        <div class="form-actions">
+                          <div class="form-actions">
                             <button type="submit" class="button button-primary">
                                 <span class="button-icon">💾</span>
                                 Registrer Timer

@@ -5,36 +5,32 @@ AppServices.locations = (function() {
     // Sikrer at nødvendige Firebase-objekter og logger er tilgjengelige
     if (typeof AppLogger === 'undefined') { console.error("AppLogger mangler i locationService.js!"); }
     if (typeof firestoreDB === 'undefined') { console.error("firestoreDB mangler i locationService.js!"); }
-    // Sjekk for firebase.firestore.FieldValue for serverTimestamp
     if (typeof firebase === 'undefined' || typeof firebase.firestore === 'undefined' || typeof firebase.firestore.FieldValue === 'undefined') {
         console.error("Firebase FieldValue (for serverTimestamp) mangler! Sørg for at Firebase SDK er fullstendig lastet.");
     }
 
     const locationsCollection = firestoreDB.collection('locations');
+
     async function addLocation(locationData) {
         if (!locationData || !locationData.name || locationData.name.trim() === '') {
             AppLogger.error('locationService: Stedsnavn kan ikke være tomt for addLocation.');
             return null;
         }
-
-        // Validering av nye felter
         if (!locationData.address || locationData.address.trim() === '') {
             AppLogger.error('locationService: Adresse kan ikke være tom for addLocation.');
             return null;
         }
-
         if (!locationData.estimatedTime || isNaN(locationData.estimatedTime) || locationData.estimatedTime <= 0) {
             AppLogger.error('locationService: Estimert tid må være et gyldig tall større enn 0 for addLocation.');
             return null;
         }
-
         AppLogger.info('locationService: Forsøker å legge til nytt sted:', locationData.name);
         try {
             const payload = {
                 name: locationData.name.trim(),
                 address: locationData.address.trim(),
                 estimatedTime: parseFloat(locationData.estimatedTime),
-                isArchived: false, 
+                isArchived: false,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
             const docRef = await locationsCollection.add(payload);
@@ -54,60 +50,22 @@ AppServices.locations = (function() {
         AppLogger.info('locationService: Henter aktive steder...');
         try {
             const snapshot = await locationsCollection
-                                    .where("isArchived", "==", false)
-                                    .orderBy("createdAt", "desc")
-                                    .get();
+                .where("isArchived", "==", false)
+                .orderBy("createdAt", "desc")
+                .get();
             const activeLocations = [];
             snapshot.forEach(doc => {
                 activeLocations.push({ id: doc.id, ...doc.data() });
             });
             AppLogger.info('locationService: Antall aktive steder funnet:', activeLocations.length);
             AppLogger.debug('locationService: Aktive steder data:', activeLocations);
-            return activeLocations; // KORRIGERT HER
+            return activeLocations;
         } catch (error) {
             AppLogger.error('locationService: Feil ved henting av aktive steder:', error);
-            return []; 
+            return [];
         }
     }
-// Inne i AppServices.locations = (function() { ... })();
 
-async function getArchivedLocations() {
-    AppLogger.info('locationService: Henter arkiverte steder...');
-    try {
-        const snapshot = await locationsCollection
-                                .where("isArchived", "==", true)
-                                .orderBy("archivedAt", "desc") // Sorter på når de ble arkivert
-                                .get();
-        const archivedLocations = [];
-        snapshot.forEach(doc => {
-            archivedLocations.push({ id: doc.id, ...doc.data() });
-        });
-        AppLogger.info('locationService: Antall arkiverte steder funnet:', archivedLocations.length);
-        return archivedLocations;
-    } catch (error) {
-        AppLogger.error('locationService: Feil ved henting av arkiverte steder:', error);
-        return [];
-    }
-}
-
-async function getTimeEntriesForLocation(locationId) {
-    AppLogger.info('locationService: Henter alle timeoppføringer for sted ID:', locationId);
-    if (!locationId) return [];
-    try {
-        // Anta at du har en 'timeEntries' collection
-        const timeEntriesRef = firestoreDB.collection('timeEntries');
-        const snapshot = await timeEntriesRef.where("locationId", "==", locationId).get();
-        const entries = [];
-        snapshot.forEach(doc => {
-            entries.push({ id: doc.id, ...doc.data() });
-        });
-        AppLogger.info('locationService: Antall timeoppføringer funnet for sted', locationId, ':', entries.length);
-        return entries;
-    } catch (error) {
-        AppLogger.error('locationService: Feil ved henting av timeoppføringer for sted:', locationId, error);
-        return [];
-    }
-}
     // NYTT: Funksjon for å arkivere et sted
     /**
      * Arkiverer et sted ved å sette isArchived til true.
@@ -124,7 +82,6 @@ async function getTimeEntriesForLocation(locationId) {
             const locationRef = locationsCollection.doc(locationId);
             await locationRef.update({
                 isArchived: true,
-                // NYTT: Legger til et tidsstempel for når stedet ble arkivert (valgfritt, men nyttig)
                 archivedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
             AppLogger.info('locationService: Sted arkivert:', locationId);
@@ -135,7 +92,7 @@ async function getTimeEntriesForLocation(locationId) {
         }
     }
 
-   // NYTT: Funksjon for å hente arkiverte steder
+    // NYTT: Funksjon for å hente arkiverte steder
     /**
      * Henter alle arkiverte steder, sortert etter når de ble arkivert (nyeste først).
      * @returns {Promise<Array<object>>} Et promise som resolver med en array av arkiverte stedsdokumenter.
@@ -144,9 +101,9 @@ async function getTimeEntriesForLocation(locationId) {
         AppLogger.info('locationService: Henter arkiverte steder...');
         try {
             const snapshot = await locationsCollection
-                                    .where("isArchived", "==", true)
-                                    .orderBy("archivedAt", "desc") // Sorter på arkiveringsdato
-                                    .get();
+                .where("isArchived", "==", true)
+                .orderBy("archivedAt", "desc") // Sorter på arkiveringsdato
+                .get();
             const archivedLocations = [];
             snapshot.forEach(doc => {
                 archivedLocations.push({ id: doc.id, ...doc.data() });
@@ -215,8 +172,7 @@ async function getTimeEntriesForLocation(locationId) {
         }
     }
 
-    
-   // NYTT: Funksjon for å hente timeregistreringer for et gitt sted, uke og år
+    // NYTT: Funksjon for å hente timeregistreringer for et gitt sted, uke og år
     /**
      * Henter timeregistreringer for en spesifikk locationId, weekNumber og year.
      * @param {string} locationId - ID-en til stedet.
@@ -225,14 +181,13 @@ async function getTimeEntriesForLocation(locationId) {
      * @returns {Promise<Array<object>>} Et promise som resolver med en array av timeregistreringer.
      */
     async function getTimeEntriesForLocationByWeekYear(locationId, weekNumber, year) {
-        // NYTT: Konverter weekNumber og year til tall, for sikkerhets skyld.
         const numWeekNumber = parseInt(weekNumber);
         const numYear = parseInt(year);
 
         AppLogger.info(`locationService: Henter timeoppføringer for sted ID: ${locationId}, Uke: ${numWeekNumber}, År: ${numYear}`);
-        
+
         if (!locationId || isNaN(numWeekNumber) || isNaN(numYear)) {
-            AppLogger.warn('locationService: Utilstrekkelig eller ugyldig data for getTimeEntriesForLocationByWeekYear.', 
+            AppLogger.warn('locationService: Utilstrekkelig eller ugyldig data for getTimeEntriesForLocationByWeekYear.',
                          { locationId, weekNumberInput: weekNumber, yearInput: year });
             return []; // Returner tom array hvis input er ugyldig
         }
@@ -243,12 +198,12 @@ async function getTimeEntriesForLocation(locationId) {
             // Firestore vil gi en feilmelding i nettleserkonsollen med en lenke
             // for å opprette indeksen første gang du kjører dette (hvis den ikke finnes).
             const snapshot = await timeEntriesCollectionRef
-                                    .where("locationId", "==", locationId)
-                                    .where("weekNumber", "==", numWeekNumber)
-                                    .where("year", "==", numYear)
-                                    .orderBy("dateOfWork", "asc") // Sorterer etter dato, eldste først i uken
-                                    .get();
-            
+                .where("locationId", "==", locationId)
+                .where("weekNumber", "==", numWeekNumber)
+                .where("year", "==", numYear)
+                .orderBy("workDate", "asc") // Sorterer etter dato, eldste først i uken
+                .get();
+
             const entries = [];
             snapshot.forEach(doc => {
                 entries.push({ id: doc.id, ...doc.data() });
@@ -261,13 +216,11 @@ async function getTimeEntriesForLocation(locationId) {
             if (error.code === 'failed-precondition') {
                 AppLogger.error("Firestore indekseringsfeil: En sammensatt indeks mangler sannsynligvis for 'timeEntries'-collection. " +
                                 "Sjekk nettleserkonsollen for en feilmelding fra Firestore med en lenke for å opprette indeksen. " +
-                                "Indeksen bør være for feltene: locationId (asc), weekNumber (asc), year (asc), dateOfWork (asc).");
-                // Du kan eventuelt kaste feilen videre eller informere brukeren på en annen måte.
+                                "Indeksen bør være for feltene: locationId (asc), weekNumber (asc), year (asc), workDate (asc).");
             }
             return []; // Returner tom array ved feil
         }
     }
-    // NYTT SLUTT
 
     // NYTT: Funksjon for å slette et sted permanent
     /**
@@ -336,7 +289,6 @@ async function getTimeEntriesForLocation(locationId) {
     }
 
     // Offentlig API for locationService
-
     return {
         addLocation: addLocation,
         getActiveLocations: getActiveLocations,
