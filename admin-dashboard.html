@@ -50,36 +50,37 @@
                         </div>
                     </div>
                 </section><section id="steder" class="card-style" style="display:none;">
-                    <div id="locations-list-container">
-                        <div class="locations-table-container card-style locations-table-card" style="margin-top:0;">                            <div class="locations-table-header-row" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 1rem;">
-                                <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600;">Faste Aktive steder</h3>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <div class="completion-status" id="completion-status">
-                                        <span class="status-icon">📊</span>
-                                        <span class="status-text" id="status-text">0 av 0 fullført</span>
-                                    </div>
-                                    <div class="week-selector-group" style="margin-bottom: 0;">
-                                        <select id="week-select" name="week-select"></select>
-                                    </div>
-                                </div>
-                            </div>
-                            <table class="data-table">
-                                <thead>                                    <tr>
-        <th>Stedsnavn</th>
-        <th>Status</th>
-        <th>Dato</th>
-        <th>Ukedag</th>
-        <th>Kanting</th>
-        <th>Arbeidstid</th>
-        <th>Ansvarlig</th>
-    </tr>
-                                </thead>
-                                <tbody id="active-locations-table-body">
-                                    <!-- Dynamisk innhold fra adminWeeklyView.js -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>                </section>                <section id="administrer-lokasjoner" class="card-style" style="display:none;">
+    <div id="locations-list-container">
+        <div class="locations-table-header-row" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 1rem;">
+            <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600;">Faste Aktive steder</h3>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <div class="completion-status" id="completion-status">
+                    <span class="status-icon">📊</span>
+                    <span class="status-text" id="status-text">0 av 0 fullført</span>
+                </div>
+                <div class="week-selector-group" style="margin-bottom: 0;">
+                    <select id="week-select" name="week-select"></select>
+                </div>
+            </div>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Stedsnavn</th>
+                    <th>Status</th>
+                    <th>Dato</th>
+                    <th>Ukedag</th>
+                    <th>Kanting</th>
+                    <th>Arbeidstid</th>
+                    <th>Ansvarlig</th>
+                </tr>
+            </thead>
+            <tbody id="active-locations-table-body">
+                <!-- Dynamisk innhold fra adminWeeklyView.js -->
+            </tbody>
+        </table>
+    </div>
+</section>                <section id="administrer-lokasjoner" class="card-style" style="display:none;">
                     <h2>Administrer lokasjoner</h2>
                     <div id="administrer-lokasjoner-content" class="administrer-layout-horizontal">                        <!-- Legg til Nytt Klippested seksjon -->
                         <div class="add-location-section card-style">
