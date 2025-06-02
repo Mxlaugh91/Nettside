@@ -19,7 +19,7 @@
     }
     
     .dashboard-header .header-content {
-        flex-direction: column;
+        flex-direction: row;
         align-items: flex-start;
         gap: 1rem;
     }
@@ -30,7 +30,7 @@
     
     .user-info {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: flex-start;
         gap: 0.5rem;
         width: 100%;
