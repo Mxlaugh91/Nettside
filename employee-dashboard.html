@@ -1,1 +1,88 @@
-faen hva er det som skjer
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ansatt Dashboard - Plenpilot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/employee.css">
+
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+</head>
+<body class="employee-body">
+    <div class="page-container employee-page-container">
+        <header class="employee-header">
+            <div class="header-content">
+                <h1>Ansatt Dashboard</h1>
+                <div class="user-info">
+                    <span id="employee-email">Laster...</span>
+                    <button id="employee-logout-button" class="button button-danger">Logg ut</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="employee-main-content">
+            <section class="card-style">
+                <h2>Mine Oppgaver</h2>
+                <div class="time-entry-section">
+                    <form id="time-entry-form">
+                        <div class="form-group">
+                            <label for="location">Velg Sted:</label>
+                            <select id="location" name="location" required>
+                                <option value="">Velg et sted</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="hours">Antall Timer:</label>
+                            <input type="number" id="hours" name="hours" step="0.5" min="0.5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="date">Dato:</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+                        <button type="submit" class="button button-primary">Registrer Timer</button>
+                    </form>
+                    <p id="time-entry-feedback" class="feedback-message" style="display:none;"></p>
+                </div>
+            </section>
+
+            <section class="card-style">
+                <h2>Mine Registreringer</h2>
+                <div class="employee-table-container">
+                    <table class="employee-data-table">
+                        <thead>
+                            <tr>
+                                <th>Dato</th>
+                                <th>Sted</th>
+                                <th>Timer</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="time-entries-table-body">
+                            <!-- Dynamisk innhold -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <footer class="employee-footer">
+            <p>&copy; <span id="current-year">2025</span> Plenpilot. Med enerett.</p>
+        </footer>
+    </div>
+
+    <script defer src="js/core/firebase-init.js"></script>
+    <script defer src="js/core/logger.js"></script>
+    <script defer src="js/services/authService.js"></script>
+    <script defer src="js/services/userService.js"></script>
+    <script defer src="js/services/timeEntryService.js"></script>
+    <script defer src="js/views/employeePage.js"></script>
+    <script defer src="js/main.js"></script>
+</body>
+</html>
